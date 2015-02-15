@@ -50,7 +50,6 @@ function manager()
 		ctx.leaveGroup(user,e);
 		});
 		*/
-
 	}
 	this.joinGroup = function(user, gid)
 	{		
@@ -75,7 +74,7 @@ function manager()
 		{
 			user.send("group does not exist");
 		}
-	}
+	}	
 
 	this.leaveGroup = function(user)
 	{	
@@ -83,6 +82,15 @@ function manager()
 		this.sendGroup(user, user.name + " left the group.");
 		user.gid = 0;
 		console.log("user left group");
+	}
+	this.listGroup = function(gid)	
+	{
+		var tmp = [];
+	  	if(groups[gid] !== undefined)
+		{
+			groups[gid].users.forEach(function (e){tmp.push(e.name)});
+		}		
+		return tmp;
 	}
 
 

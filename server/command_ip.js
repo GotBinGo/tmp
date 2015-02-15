@@ -18,12 +18,22 @@ function commandInterpreter(group_man)
 					//group_man.leaveGroup(user);
 					group_man.joinGroup(user, args[1]);
 				}
-				if(args[0] == "c" || args[0] == "create")
+				else if(args[0] == "c" || args[0] == "create")
 				{
 					console.log("\t\tcreate");
 					console.log("user wants to create " + args[1]);
 					group_man.createGroup(user, args[1]);
 				}
+				else if(args[0] == "l" || args[0] == "leave")
+				{
+					//leave
+				}
+				else if(args[0] == "li" || args[0] == "list")
+				{
+					user.send(group_man.listGroup(user.gid).join())
+				}
+				else
+					user.send("unknown command");
 			}
 			else
 				user.send("unknown command");
