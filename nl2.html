@@ -66,15 +66,19 @@
 				
 				var new_span = document.createElement("SPAN");
 				var new_br = document.createElement('br');
-				new_span.innerHTML = message;
+				new_span.textContent = message;
 				d_messages.appendChild(new_span);
 				d_messages.appendChild(new_br);	
 				if(on_bottom)
 					d_messages.scrollTop = d_messages.scrollHeight;
 			}
+			var sent = [];
+			var currup = 0;
 			function sendinp ()
-			{
+			{				
 				ws.send(inp.value);			
+				currup = 0;
+				sent.push(inp.value)
 				inp.value = "";
 				document.getElementById('inp').focus()
 				return false;
@@ -112,6 +116,22 @@
 					{			
 						sendinp();
 					}
+					if(e.keyCode == 38)
+					{			
+						if(currup < sent.length)
+						{
+							currup++;				
+							inp.value = sent[sent.length-currup];
+						}
+					}
+					if(e.keyCode == 40)
+					{			
+						if(currup > 1)
+						{
+							currup--;			
+							inp.value = sent[sent.length-currup];
+						}						
+					}					
 				}
 
 				//d_messages.innerHTML = "asd";
