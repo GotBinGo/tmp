@@ -84,6 +84,7 @@
 				return false;
 			}
 			var d_messages;
+			var dcd;
 			window.onload = function()
 			{
 				d_messages = document.getElementById('messages');
@@ -100,11 +101,19 @@
 					};
 					ws.onopen = function () {
 						printMessage("Connected");
+						dcd = false;
 						window.open = true;
 					};
 
 					ws.onclose = function () {
-						printMessage("Disconnected");
+						if(dcd === undefined)							
+							printMessage("Unable to connect, reconnecting...");																		
+						else if(!dcd)							
+							printMessage("Disconnected, reconnecting...");																		
+						dcd = true;
+						start();
+						
+						
 					};       
 
 
@@ -123,6 +132,7 @@
 							currup++;				
 							inp.value = sent[sent.length-currup];
 						}
+						e.preventDefault();
 					}
 					if(e.keyCode == 40)
 					{			
