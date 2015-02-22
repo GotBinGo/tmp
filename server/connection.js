@@ -1,12 +1,23 @@
 function start(port,interpreter)
 {
+	try	
+	{
 	var WebSocketServer = require('ws').Server;
 	wss = new WebSocketServer({port: port});
+	}
+	catch(e)
+	{
+	console.log("error"+e);
+	}
 	console.log("listening on " + port)
 	var sockets = [];
 	var socket_counter = 0;
 
-
+	wss.on('error', function(ws) 
+	{
+		console.log("error");		
+		console.log("\t" + ws.code);		
+	});
 	wss.on('connection', function(ws) 
 	{
 

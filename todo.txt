@@ -1,0 +1,2 @@
+messages scroll bar has gap on bottom
+list users, list rooms
