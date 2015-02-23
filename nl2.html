@@ -1,6 +1,7 @@
 <html>
 	<head>
-		<meta http-equiv="content-type" content="text/html; charset=windows-1252"><style>
+		<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+		<style>
 			body
 			{
 				margin:0;
@@ -93,10 +94,11 @@
 				}
 			}
 			var d_messages;
-			var dcd;
+			
 			window.onload = function()
 			{
 				d_messages = document.getElementById('messages');
+				var dcd;
 				var start = function () {
 					window.open = false;	
 					var wsImpl = window.WebSocket || window.MozWebSocket;           
@@ -165,28 +167,42 @@
 				}
 				return text;
 			}
-			function mf(input)
+			function focusIf(input)
 			{
 				if(getSelectionText() == "")
-				document.getElementById('inp').focus();	
+					document.getElementById('inp').focus();	
 			}
 		</script>
 	</head>
 	<body>
 		<div id="main">
 			<div id="container" style="width:100%; height: 100%; overflow-y: scroll;">
+				<div style="overflow:hidden">  
+				  <div style="width: calc(100% - 100px); background: red; float: left; padding-bottom: 9999px; margin-bottom: -9999px;">
+					data
+					<br>
+					data
+					<br>
+					data
+					<br>
+					
+				  </div>
 			
+					<input type="button" value="Join" style="width: 100px; float: left; padding-bottom: 9999px; margin-bottom: -9999px;"/>
+
+				</div>
 			</div>
 		</div>
 		<div id="bottom" style="height: 300px;">
 			<div style="" id="info_area">
 			</div>
 			<div id="chat" >	
-				<div id="messages" onclick="mf(this);">	
+				<div id="messages" onclick="focusIf(this);">	
 				</div>
 				<input id="inp" type="text" style="position: absolute; bottom:0; width:100%; height: 20px; margin: 0px; padding: 0px 3px;">
 				<input onclick="sendinp()"type="button" id="sendbutton" value="Send" style="width: 50px; height: 20px; position: absolute; right: 0px; bottom: 0px; margin: 0px; padding: 0px;">
 			</div>
 
 		</div>
-</body></html>
+</body>
+</html>

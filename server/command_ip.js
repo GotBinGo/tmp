@@ -39,7 +39,7 @@ function commandInterpreter(group_man)
 				user.send("unknown command");
 		}
 		else
-			group_man.sendGroup(user, msg);
+			group_man.sendUserGroup(user, msg);
 	}
 	this.ddc = function(user)
 	{
@@ -52,7 +52,7 @@ function commandInterpreter(group_man)
 	}
 	this.send_group = function (user, message)
 	{
-		group_man.sendGroup(user.gid, message);
+		group_man.sendUserGroup(user, message);
 		//	group_man.getGroup(0).users.forEach(function (e){e.ws.send(message);});
 	}
 }

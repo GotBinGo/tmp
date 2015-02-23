@@ -36,10 +36,15 @@ function manager()
 	{
 		return groups[gid];
 	}
-	this.sendGroup = function(user, message)
+	this.sendGroup = function(gid, message)
 	{
 		//console.log(gid);
-		this.getGroup(user.gid).users.forEach(function (e){e.ws.send(message);});
+		this.getGroup(gid).users.forEach(function (e){e.ws.send(message);});
+	}
+	this.sendUserGroup = function(user, message)
+	{
+		//console.log(gid);
+		this.getGroup(user.gid).users.forEach(function (e){e.ws.send(user.name+": "+message);});
 	}
 	this.dc = function (user)
 	{
@@ -62,7 +67,7 @@ function manager()
 
 				user.gid = gid;
 				groups[gid].users[user.id] = user;
-				this.sendGroup(user, user.name+" joined the room.");
+				this.sendGroup(user.gid, user.name+" joined the room.");
 				console.log(user.id + "user joined "+ user.gid)	
 			}
 			else
@@ -75,13 +80,16 @@ function manager()
 			user.send("group does not exist");
 		}
 	}	
-
 	this.leaveGroup = function(user)
 	{	
 		delete groups[user.gid].users[user.id];	
-		this.sendGroup(user, user.name + " left the group.");
+		this.sendGroup(user.gid, user.name + " left the group.");
 		user.gid = 0;
 		console.log("user left group");
+	}
+	this.groupChange = function(gid)
+	{
+		
 	}
 	this.listGroup = function(gid)	
 	{
