@@ -1,7 +1,7 @@
 module.exports = load;
-function load(gm)
+function load(rm)
 {
-	return new commandInterpreter(gm);
+	return new commandInterpreter(rm);
 }
 function commandInterpreter(rm)
 {
@@ -34,11 +34,11 @@ function commandInterpreter(rm)
 				}
 				else if(cmd[1] == "li" || cmd[1] == "list")
 				{
-					user.send(gm.listGroup(user.gid).join())
+					user.send(gm.listGroup(user.gid))
 				}
 				else if(cmd[1] == "gl" || cmd[1] == "grouplist")
 				{
-					user.send(gm.list(user.gid).join())
+					user.send(gm.list(user.gid))
 				}
 				else
 					user.send("unknown command");

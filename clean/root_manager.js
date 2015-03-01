@@ -1,7 +1,9 @@
 module.exports = new rm();
 function rm() 
 {	
-	var group_man = require('./group_manager.js');
+	var game = require('./game.js');
+	Object.defineProperty(this,"g", {writable: false, value: game});
+	var group_man = require('./group_manager.js')(this);
 	Object.defineProperty(this,"gm", {writable: false, value: group_man});
 	var command_ip = require('./command_ip.js')(this);
 	Object.defineProperty(this,"cip", {writable: false, value: command_ip});

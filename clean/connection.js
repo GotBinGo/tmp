@@ -1,6 +1,6 @@
 function start(port,rm)
 {
-	cip = rm.cip;
+	cip = rm.cip;	
 	gm = rm.gm;
 	
 	var WebSocketServer = require('ws').Server;
