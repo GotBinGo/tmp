@@ -20,7 +20,6 @@ function commandInterpreter(rm)
 				{
 					console.log("\t\tjoin");
 					console.log("user wants to join " + cmd[2]);
-					//gm.leave(user);
 					gm.join(user, cmd[2]);
 				}
 				else if(cmd[1] == "c" || cmd[1] == "create")
@@ -29,17 +28,23 @@ function commandInterpreter(rm)
 					console.log("user wants to create " + cmd[1]);
 					gm.create(user, cmd[2]);
 				}
-				else if(cmd[1] == "l" || cmd[1] == "leave")
+				else if(cmd[1] == "l" || cmd[1] == "leave") //useless
 				{
 					gm.join(user, 0);
 				}
 				else if(cmd[1] == "li" || cmd[1] == "list")
+				{
+					user.send(gm.listGroup(user.gid).join())
+				}
+				else if(cmd[1] == "gl" || cmd[1] == "grouplist")
 				{
 					user.send(gm.list(user.gid).join())
 				}
 				else
 					user.send("unknown command");
 			}
+			else if(cmd[0] == "/sa")
+				gm.sendAll(cmd[1]);
 			else
 				user.send("unknown command");
 		}

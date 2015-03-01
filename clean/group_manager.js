@@ -4,25 +4,39 @@ function manager()
 	//pirvate---------------
 	var groups = [];
 	var group_counter = 0;
+	function onUserRoster(gid)
+	{
+		send(gid, "/ourc")
+	}
+	function onGroupRoster()
+	{
+		send(gid, "/ogrc")
+	}
 	//public----------------	
 	function create(user, name, pw)
 	{
-		var new_user = {};
-		new_user.owner = user;
-		new_user.id = group_counter;
+		var new_group = {};
+		new_group.owner = user;
+		new_group.id = group_counter;
 		group_counter++;
 		if(name == "" || name === undefined)
-			new_user.name = "";
+			new_group.name = "";
 		else
-			new_user.name = name;
+			new_group.name = name;
 		if(pw == "" || pw === undefined)
-			new_user.pw = "";
+			new_group.pw = "";
 		else
-			new_user.pw = pw;	
-		new_user.users = [];
-		groups[new_user.id] = new_user;
-		console.log("group " + new_user.id + " was created");	
-	}	
+			new_group.pw = pw;	
+		new_group.users = [];
+		groups[new_group.id] = new_group;
+		onGroupRoster();
+		console.log("group " + new_group.id + " was created");	
+		join(user, new_group.id);
+	}
+	function remove(user, gid)
+	{
+		onGroupRoster();
+	}
 	function join(user, gid)
 	{
 		if(groups[gid] !== undefined)
@@ -31,13 +45,17 @@ function manager()
 			{
 				if(user.gid !== undefined) //intial condition
 				{
-					leave(user);
-					console.log("WHAT");
+					delete groups[user.gid].users[user.id];	
+					if(groups[user.gid].users.filter(function(value) { return value !== undefined }).length) == 0)
+						remove();
+					send(user.gid, user.name + " left the group.");
+					onUserRoster(user.gid);
 				}
 				user.gid = gid;
 				groups[gid].users[user.id] = user;
 				send(user.gid, user.name+" joined the room.");
 				console.log(user.id + "user joined "+ user.gid)	
+				onUserRoster(gid);
 			}
 			else
 			{
@@ -49,11 +67,12 @@ function manager()
 			user.send("group does not exist" + gid);
 		}
 	}
-	function leave(user)
+	function leave(user) //intentionally not put in any new group
 	{
 		delete groups[user.gid].users[user.id];	
 		send(user.gid, user.name + " left the group.");
-		user.gid = 0;
+		onUserRoster(gid);		
+		user.ws.close();		
 		console.log("user left group");
 	}	
 	function send(gid, msg)
@@ -64,10 +83,16 @@ function manager()
 	{
 		groups[user.gid].users.forEach(function (e){e.ws.send(user.name+": " + msg);});
 	}
+	function sendAll(msg)
+	{
+		groups.forEach(function (g){
+			g.users.forEach(function (e){e.ws.send(msg);});
+		});
+	}
 	function list()
 	{
 		var tmp = [];
-			groups.forEach(function (e){tmp.push(e.name)});	
+			groups.forEach(function (e){tmp.push(e.id)});	
 		return tmp;
 	}
 	function listGroup(gid)
@@ -85,7 +110,8 @@ function manager()
 	Object.defineProperty(this,"leave", {writable: false, value: leave});
 	Object.defineProperty(this,"send", {writable: false, value: send});
 	Object.defineProperty(this,"sendUser", {writable: false, value: sendUser});
-	Object.defineProperty(this,"list", {writable: false, value: listGroup});
+	Object.defineProperty(this,"sendAll", {writable: false, value: sendAll});
+	Object.defineProperty(this,"list", {writable: false, value: list});
 	Object.defineProperty(this,"listGroup", {writable: false, value: listGroup});
 	console.log("module loaded");
 }
