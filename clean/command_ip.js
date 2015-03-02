@@ -8,10 +8,10 @@ function commandInterpreter(rm)
 	gm = rm.gm
 	this.run = function(user, msg)
 	{
-		console.log(user.name + " sent " + msg);		
+		//console.log(user.name + " sent " + msg);		
 		if(msg[0] == "/")
 		{
-			console.log("command");			
+			//console.log("command");			
 			cmd = [msg.substring(0,msg.indexOf(" "))].concat(msg.substring(msg.indexOf(" ")+1,msg.length).split(" "));
 			if(cmd[0] == "/group" || cmd[0] == "/g")
 			{

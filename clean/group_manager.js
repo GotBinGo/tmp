@@ -10,7 +10,7 @@ function manager(rm)
 	var group_counter = 0;
 	function onUserRoster(gid)
 	{		
-		send(gid, "/ourc "+listGroup(gid))
+		send(gid, "/ourc "+JSON.stringify([{name:groups[gid].name}].concat(JSON.parse(listGroup(gid)))))
 	}
 	function onGroupRoster()
 	{
@@ -137,7 +137,7 @@ function manager(rm)
 		if(groups[user.gid].game !== undefined)
 			groups[user.gid].game.message(user, msg);
 	}
-	create({},"root");
+	create({},"Landing room");
 	Object.defineProperty(this,"create", {writable: false, value: create});
 	Object.defineProperty(this,"join", {writable: false, value: join});
 	Object.defineProperty(this,"leave", {writable: false, value: leave});

@@ -9,11 +9,10 @@
 			#bottom 
 			{
 				border: 2px solid;
-				width: calc(100% - 30px);
-				height: 215px;
+				width: calc(100% - 24px);
 				position: absolute;
-				bottom: 15px;
-				left: 15px;
+				bottom: 10px;
+				left: 10px;
 				background-color:rgb(200,200,200);
 			}
 			#info_area
@@ -49,10 +48,10 @@
 			#main
 			{	
 				position: absolute;
-				top: 15px;
-				left: 15px;
-				height: calc(100% - 350px);				
-				width: calc(100% - 30px);
+				top: 10px;
+				left: 10px;
+				height: calc(100% - 338px);				
+				width: calc(100% - 24px);
 				background-color: gray;	
 				border: 2px solid;				
 			}
@@ -101,6 +100,16 @@
 			function onUserRoster(data)
 			{
 				console.log("ourc"+ data);
+				var arr = JSON.parse(data);
+				d_info_area_container.innerHTML = "";
+				for(var i = 0; i< arr.length; i ++)
+				{
+					var new_div = document.createElement("DIV");
+					var a = "<div style='margin-bottom:5px; width:100%; position:relative; box-sizing:border-box; padding:5px 5px 5px 5px; background-color:#333; color:#ddd'>"+arr[i].name+"</div>";
+					new_div.innerHTML = a;
+					//d_main_container.appendChild(new_div);
+					d_info_area_container.appendChild(new_div);
+				}		
 			}
 			function onGroupRoster(data)
 			{
@@ -119,13 +128,12 @@
 			}
 			function onGameUpdate(data)
 			{
-				//console.log(data);
 				draw(JSON.parse(data));
 			}
 			function draw(data)
 			{
 				clear();
-				data.forEach(function (e){circle(e.posx,e.posy,10);});
+				data.forEach(function (e){circle(e.px,e.py,10);});
 				
 			}
 			function circle(x,y,r)
@@ -215,10 +223,13 @@
 				}
 				if(e.keyCode == 37)
 				{
-					if(!keys[0])
+					if(document.activeElement.id != "inp")
 					{
-						keys[0] = true;
-						ws.send("/game keys 0 1");
+						if(!keys[0])
+						{
+							keys[0] = true;
+							ws.send("/game keys 0 1");
+						}
 					}
 				}
 				if(e.keyCode == 38) //up
@@ -232,19 +243,25 @@
 						}
 						e.preventDefault();
 					}
-					else if(!keys[1])
+					else 
 					{
-						keys[1] = true;
-						ws.send("/game keys 1 1");
+						if(!keys[1])
+						{
+							keys[1] = true;
+							ws.send("/game keys 1 1");
+						}
 					}
 
 				}
-				if(e.keyCode == 39)
+				if(e.keyCode == 39 )
 				{
-					if(!keys[2])
+					if(document.activeElement.id != "inp")
 					{
-						keys[2] = true;
-						ws.send("/game keys 2 1");
+						if(!keys[2])
+						{
+							keys[2] = true;
+							ws.send("/game keys 2 1");
+						}
 					}
 				}
 				if(e.keyCode == 40) //down
@@ -257,10 +274,13 @@
 							inp.value = sent[sent.length-currup];
 						}						
 					}
-					else if(!keys[3])
+					else 
 					{
-						keys[3] = true;
-						ws.send("/game keys 3 1");
+						if(!keys[3])
+						{
+							keys[3] = true;
+							ws.send("/game keys 3 1");
+						}
 					}
 				}					
 			}
