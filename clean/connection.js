@@ -15,7 +15,7 @@ function start(port,rm)
 	});
 	wss.on('connection', function(ws) 
 	{
-		console.log("connect" + socket_counter)
+		//console.log("connect" + socket_counter)
 		ws.id = socket_counter;
 		socket_counter++; 
 

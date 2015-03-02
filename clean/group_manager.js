@@ -14,7 +14,7 @@ function manager(rm)
 	}
 	function onGroupRoster()
 	{
-		sendAll("/ogrc " + list())
+		send(0,"/ogrc " + list())
 	}
 	//public----------------	
 	function create(user, name, pw)
@@ -31,13 +31,15 @@ function manager(rm)
 			new_group.pw = "";
 		else
 			new_group.pw = pw;	
-		new_group.users = [];
-		if(new_group.id != 0)
-			new_group.game = new rm.g();
+		new_group.users = [];		
 		groups[new_group.id] = new_group;
 		onGroupRoster();
 		console.log("group " + new_group.id + " was created");	
-		join(user, new_group.id);
+		if(new_group.id != 0)
+		{
+			new_group.game = new rm.g(new_group.id);
+			join(user, new_group.id);
+		}
 	}
 	function remove(user)
 	{
@@ -70,7 +72,7 @@ function manager(rm)
 				user.gid = gid;
 				groups[gid].users[user.id] = user;
 				send(user.gid, user.name+" joined "+ groups[gid].name+".");
-				console.log(user.id + "user joined "+ user.gid)	
+				console.log(user.id + " user joined "+ user.gid)	
 				if(gid != 0)
 					groups[gid].game.join(user);
 				onUserRoster(gid);
@@ -78,7 +80,7 @@ function manager(rm)
 			}
 			else
 			{
-				user.send("already in that group" + user.gid + " " + gid);
+				user.send("already in that group");
 			}
 		}
 		else
@@ -130,6 +132,11 @@ function manager(rm)
 		}		
 		return JSON.stringify(tmp);
 	}
+	function gameMessage(user, msg)
+	{
+		if(groups[user.gid].game !== undefined)
+			groups[user.gid].game.message(user, msg);
+	}
 	create({},"root");
 	Object.defineProperty(this,"create", {writable: false, value: create});
 	Object.defineProperty(this,"join", {writable: false, value: join});
@@ -139,5 +146,6 @@ function manager(rm)
 	Object.defineProperty(this,"sendAll", {writable: false, value: sendAll});
 	Object.defineProperty(this,"list", {writable: false, value: list});
 	Object.defineProperty(this,"listGroup", {writable: false, value: listGroup});
-	console.log("module loaded");
+	Object.defineProperty(this,"gameMessage", {writable: false, value: gameMessage});
+	console.log("gm loaded");
 }

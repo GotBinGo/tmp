@@ -14,7 +14,7 @@ function commandInterpreter(rm)
 			console.log("command");			
 			cmd = [msg.substring(0,msg.indexOf(" "))].concat(msg.substring(msg.indexOf(" ")+1,msg.length).split(" "));
 			if(cmd[0] == "/group" || cmd[0] == "/g")
-			{	
+			{
 				console.log("\tgroup");							
 				if(cmd[1] == "j" || cmd[1] == "join")
 				{
@@ -43,8 +43,8 @@ function commandInterpreter(rm)
 				else
 					user.send("unknown command");
 			}
-			else if(cmd[0] == "/sa")
-				gm.sendAll(cmd[1]);
+			else if(cmd[0] == "/game")
+				gm.gameMessage(user, msg);
 			else
 				user.send("unknown command");
 		}
