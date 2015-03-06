@@ -70,11 +70,11 @@
 				
 				var new_span = document.createElement("SPAN");
 				var new_br = document.createElement('br');
-				new_span.style.display = "inline-block";
+				new_span.style.display = "block";
 				new_span.style.height = "17px";
 				new_span.textContent = message;
 				d_messages.appendChild(new_span);
-				d_messages.appendChild(new_br);	
+				//d_messages.appendChild(new_br);
 				if(on_bottom)
 					d_messages.scrollTop = d_messages.scrollHeight;
 			}
