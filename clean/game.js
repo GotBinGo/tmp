@@ -18,10 +18,68 @@ function game(gid)
 	}
 	function tick()
 	{
-		elapsed = Date.now()-last_time;
+		elapsed = Date.now()-last_time+0.00001;
 		update()
 		sendBalls();
 		last_time = Date.now();
+	}
+	function custcoll(m1, m2, R, e, f)
+	{
+		var mode = 'f';
+		var r1 = 10;
+		var r2 = 10;
+		var c = {e:e, f:f};
+		var x1 = e.px;
+		var y1 = e.py;
+		var x2 = f.px;		
+		var y2 = f.py;
+		
+		var vx1 = e.vx;
+		var vy1 = e.vy;
+		var vx2 = f.vx;		
+		var vy2 = f.vy;
+
+		var pi2=2*Math.acos(-1);
+		var r12=r1+r2;
+		var m21=m2/m1;
+		var x21=x2-x1;
+		var y21=y2-y1;
+		var vx21=vx2-vx1;
+		var vy21=vy2-vy1;
+		
+		var vx_cm = (m1*vx1+m2*vx2)/(m1+m2) ;
+		var vy_cm = (m1*vy1+m2*vy2)/(m1+m2) ;
+
+
+		if ( vx21==0 && vy21==0 ) 
+			return c;
+      
+		var gammav = Math.atan2(-vy21,-vx21);        
+		var d = Math.sqrt(x21*x21 +y21*y21);
+
+		var gammaxy=Math.atan2(y21,x21);
+		var dgamma=gammaxy-gammav;
+		if (dgamma>pi2) 
+			dgamma=dgamma-pi2;
+		else if (dgamma<-pi2) 
+			dgamma=dgamma+pi2;
+       var dr=d*Math.sin(dgamma)/r12;
+       var alpha=Math.asin(dr);
+       var a=Math.tan( gammav + alpha);
+
+       var dvx2=-2*(vx21 +a*vy21) /((1+a*a)*(1+m21));
+       
+       vx2=vx2+dvx2;
+       vy2=vy2+a*dvx2;
+       vx1=vx1-m21*dvx2;
+       vy1=vy1-a*m21*dvx2;
+       c.e.vx=(vx1-vx_cm)*R + vx_cm;
+       c.e.vy=(vy1-vy_cm)*R + vy_cm;
+       c.f.vx=(vx2-vx_cm)*R + vx_cm;
+       c.f.vy=(vy2-vy_cm)*R + vy_cm;
+	   //console.log(vx_cm + " " +vx1+ " " +R + " " + gammav);
+	   c.coll = true;
+		return c;
 	}
 	function update()
 	{
@@ -55,6 +113,56 @@ function game(gid)
 			var collx = false;
 			var colly = false;
 			var coll = false;
+			players.forEach(function (f)
+			{			
+				if(f.user.id != e.user.id)
+				{
+				var dx = e.px-f.px;
+				var dy = e.py-f.py;
+				var ds = dx*dx +dy*dy;
+				var dss = Math.sqrt(ds);
+				if(ds<(10+10)*(10+10))
+				{					
+					var mag = e.vx*dx+e.vy*dy;					
+					if(!(mag>0))
+					{
+						var c = custcoll(1,1,1,e,f);	
+						coll = c.coll;
+						//console.log(c);
+						e.vx = c.e.vx;
+						e.vy = c.e.vy;
+						f.vx = c.f.vx;
+						f.vy = c.f.vy;
+						
+	
+						e.px = c.e.px;
+						e.py = c.e.py;
+						f.px = c.f.px;
+						f.py = c.f.py;
+						/*
+						console.log("coll");
+						var tmpp = e.vx;
+						e.vx = f.vx;
+						f.vx = tmpp;
+						
+						tmpp = e.vy;
+						e.vy = f.vy;
+						f.vy = tmpp;
+						
+					/*
+						mag /= ds;
+						e.vx -= 2*dx*mag;
+						e.vy -= 2*dy*mag;
+						e.px += e.vx;
+						e.py += e.vy;
+						e.px += e.vx;
+						e.py += e.vy;
+						e.vx += dx*mag;
+						e.vy += dy*mag;		*/
+					}
+				}}
+				
+			});
 			objects.forEach(function (f)
 			{
 				var c = f.collide(e.px,e.py,e.vx*elapsed/1000,e.vy*elapsed/1000);
@@ -62,6 +170,14 @@ function game(gid)
 				e.vy = c.vy*1000/elapsed;
 				e.px = c.px;
 				e.py = c.py;
+				if(isNaN(c.px) || isNaN(c.vx) || isNaN(c.py) || isNaN(c.vy))
+				{	
+					console.log(e);
+					console.log(f);
+					console.log(c);
+					console.log(elapsed);
+					throw "end";
+				}
 				if(c.collx)
 					collx = true;
 				if(c.colly)
@@ -73,13 +189,13 @@ function game(gid)
 				}
 			});
 			if(e.keys[0])
-				e.vx-=1;
+				e.vx-=3;
 			if(e.keys[1])
-				e.vy-=1;
+				e.vy-=3;
 			if(e.keys[2])
-				e.vx+=1;
+				e.vx+=3;
 			if(e.keys[3])
-				e.vy+=1;
+				e.vy+=3;
 			if(!collx && !coll)
 				e.px += e.vx * elapsed/1000;
 			if(!colly && !coll)
@@ -91,14 +207,17 @@ function game(gid)
 	function sendBalls()
 	{
 		var tmp = [];
+		
 		objects.forEach(function (e){
 			tmp.push({x:e.x, y:e.y, w:e.w, h:e.h ,type:e.type,r:e.r});
 		});
 		players.forEach(function (e){
-			tmp.push({name:e.user.name, px:e.px, py:e.py,type:'ball'});
+			tmp.push({id:e.user.id, name:e.user.name, px:e.px, py:e.py,type:'ball'});
 		});		
-		players.forEach(function (e){		
+		players.forEach(function (e){	
+			tmp.splice(0, 0, {px:e.px, py:e.py, id:e.user.id, type:"self"});
 			e.user.send("/gbm " + JSON.stringify(tmp));
+			tmp.shift();
 		});
 /*		var tmp = [];
 		objects.forEach(function (e){
@@ -118,6 +237,7 @@ function game(gid)
 		this.type = "wall";
 		this.collide = function (px, py, vx, vy)
 		{
+
 			var e = {px:px,py:py,vx:vx,vy:vy};
 			//console.log(this.x+" "+e.px+" "+(e.px+e.vx));
 			var collx = false;
@@ -128,16 +248,14 @@ function game(gid)
 				if(e.px < this.x && e.px+e.vx >= this.x-1)
 				{
 					e.px = this.x-Math.abs(px+vx-this.x);
-					e.vx = -Math.abs(vx);
-					console.log("be");
+					e.vx = -Math.abs(vx);					
 					collx = true;
 				}
 				this.x += 20;
 				if(e.px > this.x && e.px+e.vx <= this.x+1)
 				{
 					e.px = this.x + Math.abs(px+vx-this.x);
-					e.vx = Math.abs(vx);
-					console.log("bc");
+					e.vx = Math.abs(vx);					
 					collx = true;
 				}
 				this.x -=10;
@@ -166,7 +284,7 @@ function game(gid)
 				{
 					e.py = this.y-Math.abs(py+vy-this.y);
 					e.vy = -Math.abs(vy);
-					console.log("be");
+					//console.log("be");
 					colly = true;
 				}
 				this.y +=20;
@@ -174,7 +292,7 @@ function game(gid)
 				{
 					e.py = this.y + Math.abs(py+vy-this.y);
 					e.vy = Math.abs(vy);
-					console.log("bc");
+					//console.log("bc");
 					colly = true;
 				}
 				this.y -=10;
@@ -186,7 +304,7 @@ function game(gid)
 	function circle(x, y, r)
 	{
 		this.x = x;
-		this.y = y;
+		this. y = y;
 		this.r = r;
 		this.type = "circle";
 		this.collide = function (px, py, vx, vy)
@@ -202,12 +320,18 @@ function game(gid)
 				if(!(mag>0))
 				{
 					mag /= ds;
-					e.vx -= 2*dx*mag;
-					e.vy -= 2*dy*mag;
+					e.vx -= 1.7*dx*mag;
+					e.vy -= 1.7*dy*mag;
+					// e.vx = 0;
+					// e.vy = 0;
+					e.px += e.vx;
+					e.py += e.vy;
+					// e.px += e.vx;
+					// e.py += e.vy;
+
 					colly = true;
 				}
-			}
-			
+			}			
 			e.coll = coll;
 			return e;
 		}	
@@ -231,18 +355,21 @@ function game(gid)
 	function start()
 	{
 		state = "running";
-		timer = setInterval(function (){tick()}, 10);
+		
 		objects.push(new vline(100,0,50));
 		objects.push(new vline(150,50,500));
 		objects.push(new hline(50,100,500));
-		objects.push(new circle(110,40,21));
+		objects.push(new circle(100,50,10));
+		objects.push(new circle(50,200,50));
+		/*
 		var tmp = [];
 		objects.forEach(function (e){
 			tmp.push({x:e.x, y:e.y, w:e.w, h:e.h,type:'wall'});
 		});
 		players.forEach(function (e){
 			e.user.send("/gbm " + JSON.stringify(tmp));
-		});
+		});*/
+		timer = setInterval(function (){tick()}, 10);
 
 	}
 	function message(user, msg)
@@ -256,3 +383,5 @@ function game(gid)
 	Object.defineProperty(this,"start", {writable: false, value: start});
 	Object.defineProperty(this,"message", {writable: false, value: message});
 }
+
+
