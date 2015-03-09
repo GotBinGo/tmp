@@ -98,7 +98,7 @@
 			function onLobby(data)
 			{
 				console.log("olobb "+ data);
-				d_main_container.innerHTML = "<canvas id='canvas' width='500' height='500' style='border:1px solid #000000;'>></canvas>";
+				d_main_container.innerHTML = "<canvas id='canvas' width='1000' height='1000' style='max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
 				c = document.getElementById("canvas");
 				ctx = c.getContext("2d");
 			}
@@ -187,7 +187,7 @@
 				c.width = c.width;	
 				ctx.fillStyle="white";
 				ctx.globalAlpha=0.03;
-				ctx.fillRect(0,0,500,500); 
+				ctx.fillRect(0,0,1000,1000); 
 				ctx.globalAlpha=1;
 				ctx.fillStyle="red";
 			}
@@ -224,8 +224,8 @@
 				var start = function () {
 					window.open = false;	
 					var wsImpl = window.WebSocket || window.MozWebSocket;           
-					//window.ws = new wsImpl('ws://s13.webtar.hu:80/');
-					window.ws = new wsImpl('ws://192.168.0.67:80');
+					window.ws = new wsImpl('ws://s13.webtar.hu:80/');
+					//window.ws = new wsImpl('ws://192.168.0.67:80');
 
 					ws.onmessage = function (evt) 
 					{
