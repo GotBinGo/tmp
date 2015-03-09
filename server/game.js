@@ -1,4 +1,5 @@
 module.exports = game;
+var gr = 20;
 function game(gid)
 {
 	//private
@@ -26,8 +27,8 @@ function game(gid)
 	function custcoll(m1, m2, R, e, f)
 	{
 		var mode = 'f';
-		var r1 = 10;
-		var r2 = 10;
+		var r1 = gr;
+		var r2 = gr;
 		var c = {e:e, f:f};
 		var x1 = e.px;
 		var y1 = e.py;
@@ -85,9 +86,16 @@ function game(gid)
 	{
 		players.forEach(function (e)
 		{
-			e.vx *= 0.9789;
-			e.vy *= 0.9789;
+			
+		/*	e.vx *= Math.pow(1-0.9789,elapsed*5);
+			e.vy *= Math.pow(1-0.9789,elapsed*5);
 
+			//for(var i = 0; i < elapsed; i ++)
+			
+			//	console.log(i);
+*/
+			e.vx *= 0.99;
+			e.vy *= 0.99;
 /*
 			if(e.px <= 10)
 			{
@@ -121,7 +129,7 @@ function game(gid)
 				var dy = e.py-f.py;
 				var ds = dx*dx +dy*dy;
 				var dss = Math.sqrt(ds);
-				if(ds<(10+10)*(10+10))
+				if(ds<(gr+gr)*(gr+gr))
 				{					
 					var mag = e.vx*dx+e.vy*dy;					
 					if(!(mag>0))
@@ -244,21 +252,21 @@ function game(gid)
 			
 			if(py+vy >this.y && py+vy <= this.y+h)
 			{
-				this.x -= 10;
+				this.x -= gr;
 				if(e.px < this.x && e.px+e.vx >= this.x-1)
 				{
 					e.px = this.x-Math.abs(px+vx-this.x);
 					e.vx = -Math.abs(vx);					
 					collx = true;
 				}
-				this.x += 20;
+				this.x += 2*gr;
 				if(e.px > this.x && e.px+e.vx <= this.x+1)
 				{
 					e.px = this.x + Math.abs(px+vx-this.x);
 					e.vx = Math.abs(vx);					
 					collx = true;
 				}
-				this.x -=10;
+				this.x -=gr;
 			}
 			e.collx = collx;
 			return e;
@@ -279,7 +287,7 @@ function game(gid)
 			
 			if(px+vx >this.x && px+vx <= this.x+w)
 			{
-				this.y -= 10;
+				this.y -= gr;
 				if(e.py < this.y && e.py+e.vy >= this.y-1)
 				{
 					e.py = this.y-Math.abs(py+vy-this.y);
@@ -287,7 +295,7 @@ function game(gid)
 					//console.log("be");
 					colly = true;
 				}
-				this.y +=20;
+				this.y +=2*gr;
 				if(e.py > this.y && e.py+e.vy <= this.y+1)
 				{
 					e.py = this.y + Math.abs(py+vy-this.y);
@@ -295,7 +303,7 @@ function game(gid)
 					//console.log("bc");
 					colly = true;
 				}
-				this.y -=10;
+				this.y -=gr;
 			}
 			e.colly = colly;
 			return e;
@@ -314,7 +322,7 @@ function game(gid)
 			var dx = px-this.x;
 			var dy = py-this.y;
 			var ds = dx*dx +dy*dy;
-			if(ds<(r+0)*(r+0))
+			if(ds<(r+gr-10)*(r+gr-10))
 			{
 				var mag = vx*dx+vy*dy;
 				if(!(mag>0))

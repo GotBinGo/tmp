@@ -160,9 +160,9 @@
 				}
 				if(e.type == "ball")
 					if(e.id != selfid)
-						circle(e.px, e.py, 10);		
+						circle(e.px, e.py, 20);
 					else
-						circle(0+posx, 0+posy, 10);		
+						circle(0+posx, 0+posy, 20);
 				else if(e.type == "wall")
 					line(e.x, e.y, e.x+e.w, e.y+e.h);
 				else if(e.type == "circle")
