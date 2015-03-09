@@ -107,13 +107,22 @@
 				console.log("ourc"+ data);
 				var arr = JSON.parse(data);
 				d_info_area_container.innerHTML = "";
+				d_info_area_header.innerHTML = "";
 				for(var i = 0; i< arr.length; i ++)
 				{
 					var new_div = document.createElement("DIV");
 					var a = "<div style='margin-bottom:5px; width:100%; position:relative; box-sizing:border-box; padding:5px 5px 5px 5px; background-color:#333; color:#ddd'>"+arr[i].name+"</div>";
 					new_div.innerHTML = a;
 					//d_main_container.appendChild(new_div);
-					d_info_area_container.appendChild(new_div);
+					
+					if(i == 0)
+					{
+						var a = "<div style='margin-bottom:5px; height:100%; width:100%; position:relative; box-sizing:border-box; padding:5px 5px 5px 5px; background-color:#333; color:#ddd'><h3 style='margin:0;'>"+arr[i].name+"</h3></div>";
+						new_div.innerHTML = a;
+						d_info_area_header.appendChild(new_div);
+					}
+					else
+						d_info_area_container.appendChild(new_div);
 				}		
 			}
 			function onGroupRoster(data)
@@ -200,6 +209,7 @@
 			var d_messages;
 			var d_main_container;
 			var d_info_area_container;
+			var d_info_area_header;
 			var c;
 			var ctx;
 			var keys = [false, false, false, false];
@@ -209,6 +219,7 @@
 				d_messages = document.getElementById('messages');
 				d_main_container = document.getElementById('main_container');
 				d_info_area_container = document.getElementById('info_area_container');
+				d_info_area_header = document.getElementById('info_area_header');
 				var dcd;
 				var start = function () {
 					window.open = false;	
@@ -374,7 +385,7 @@
 		</div>
 		<div id="bottom" style="height: 300px;">
 			<div style="" id="info_area">
-			 	<div id="info_area_header" style="box-sizing:border-box; width:100%; height: 50px; overflow-y: auto; background-color:red;">
+			 	<div id="info_area_header" style="box-sizing:border-box; width:100%; height: 50px; background-color:#333;">
 				</div> 
 				<div id="info_area_container" style="padding:5px; box-sizing:border-box; width:100%; height: calc(100% - 50px); overflow-y: auto;">
 				</div>
