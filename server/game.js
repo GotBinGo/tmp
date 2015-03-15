@@ -367,7 +367,7 @@ function game(gid)
 		objects.push(new vline(100,0,50));
 		objects.push(new vline(150,50,500));
 		objects.push(new hline(50,100,500));
-		objects.push(new circle(100,50,10));
+		objects.push(new circle(100,50,11));
 		objects.push(new circle(50,200,50));
 		/*
 		var tmp = [];
