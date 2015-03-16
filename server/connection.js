@@ -21,8 +21,9 @@ function start(port,rm)
 
 		var new_user = {};
 		new_user.ws = ws;
-		new_user.name = ws.id;
 		new_user.id = ws.id;
+		new_user.name = ws.id;
+		
 
 		ws.on('message', function(message) 
 		{
