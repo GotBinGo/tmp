@@ -15,6 +15,10 @@ function game(gid)
 	{
 		clearInterval(timer);
 	}
+	function gameUpdate()
+	{
+		
+	}
 	function update()
 	{	
 		var elapsed = Date.now()-last_time+0.00001;
@@ -24,19 +28,25 @@ function game(gid)
 			var data = {mode:canvasMode};			
 			if(canvasMode)
 			{
+				//gameUpdate();
+				{
+				if(inRange(objects[0].x,objects[0].y,objects[0].r, e.px, e.py, e.r))
+						console.log("coll");
+				}
 				data.value = [];
 				data.value.push({type:"pos",x:e.px,y:e.py});					
 				if(e.keys[4])
-					data.value.push({type:"line",x:50,y:50,w:20,h:10,position:"absolute"});
-				objects.forEach(function (f)
-				{
-					data.value.push(f);
-					//data.value.push({type:"text",x:f.px,y:f.py,text:f.user.name});
-				});
+					data.value.push({type:"line",x:50,y:50,w:20,h:10,position:"absolute"});				
+				
 				players.forEach(function (f)
 				{
 					data.value.push({type:"circle",x:f.px,y:f.py,r:30,c:f.team==0 ? "red" : "blue"});
 					data.value.push({type:"text",x:f.px,y:f.py,text:f.user.name});
+				});
+				objects.forEach(function (f)
+				{
+					data.value.push(f);
+					//data.value.push({type:"text",x:f.px,y:f.py,text:f.user.name});
 				});
 				e.vx *= 0.97;
 				e.vy *= 0.97;
@@ -88,10 +98,10 @@ function game(gid)
 					data.value += f.user.name;
 				});
 			}
-			if(JSON.stringify(e.out) != JSON.stringify(data))
+			if(e.out != JSON.stringify(data))
 			{
 				e.user.send('/gu '+ JSON.stringify(data));
-				e.out = data;
+				e.out = JSON.stringify(data);
 			}			
 		});
 		last_time = Date.now();
@@ -117,10 +127,21 @@ function game(gid)
 				return false;
 		});
 	}
+	//helper
+	function inRange(x1,y1,r1,x2,y2,r2)
+	{
+		
+		var dist = Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+		//console.log(dist + " " + r1+r2);
+		if(dist < r1+r2)
+			return true;
+		else
+			return false;
+	}
 	//public
 	function join(user)
 	{			
-		players[user.id] = {user:user, team:-1, score: 0, px:0, py:0, vx:0, vy:0, r:10, keys:[false, false, false, false,false], out:{}};
+		players[user.id] = {user:user, team:-1, score: 0, px:0, py:0, vx:0, vy:0, r:30, keys:[false, false, false, false,false], out:""};
 		players[user.id].team = team(1).length < team(0).length ? 1 : 0;
 		
  
@@ -137,7 +158,7 @@ function game(gid)
 	function start()
 	{
 		state = "running";		
-		objects.push({type:"flag",x:50,y:50,r:10});
+		objects.push({type:"flag",x:50,y:50,r:20});
 		timer = setInterval(function (){update()}, 10);
 		mode(true);
 		

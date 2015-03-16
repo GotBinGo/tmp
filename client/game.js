@@ -11,6 +11,7 @@ var ctx;
 function onGameUpdate(m)
 {
 	var data = JSON.parse(m);
+	console.log(m);
 	if(data.mode)
 	{
 		if(d_main_container.innerHTML.substring(1,7) != "canvas")
