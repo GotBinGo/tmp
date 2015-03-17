@@ -120,7 +120,7 @@ function manager(rm)
 	function list()
 	{
 		var tmp = [];
-			groups.forEach(function (e){if(e.id != 0)tmp.push({name:e.name,id:e.id})});	
+			groups.forEach(function (e){if(e.id != 0)tmp.push({name:e.name,id:e.id,score:e.score})});	
 		return JSON.stringify(tmp);
 	}
 	function listGroup(gid)
