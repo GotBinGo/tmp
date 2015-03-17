@@ -61,7 +61,7 @@ function drawElement(e)
 		else
 			text(e.x+width/2-posx, e.y+height/2-posy, e.text);
 	else if(e.type == "flag")
-		flag(e.x+width/2-posx, e.y+height/2-posy,e.r,"blue");
+		flag(e.x+width/2-posx, e.y+height/2-posy,e.r,e.team);
 	else if(e.type == "pos")
 	{
 		posx = e.x;
@@ -92,8 +92,9 @@ function circle(x,y,r,c)
 	ctx.closePath();
 	ctx.fillStyle="black";
 }
-function flag(x,y,r,c)
+function flag(x,y,r,team)
 {			
+	var c = team == 0 ? "red" : "blue";
 	circle(x,y,r,"green");
 	line(x,y-25,x,y+25);
 	line(x-1,y-25,x-1,y+25);
