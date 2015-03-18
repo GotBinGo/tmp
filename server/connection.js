@@ -23,7 +23,7 @@ function start(port,rm)
 		new_user.ws = ws;
 		new_user.id = ws.id;
 		new_user.name = ws.id;
-		
+		new_user.score = 0;
 
 		ws.on('message', function(message) 
 		{

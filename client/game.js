@@ -95,7 +95,12 @@ function circle(x,y,r,c)
 function flag(x,y,r,team)
 {			
 	var c = team == 0 ? "red" : "blue";
-	circle(x,y,r,"green");
+	//circle(x,y,r,"green");
+		ctx.beginPath();
+	ctx.arc(x, y, r, 0, 2 * Math.PI, false);	
+	ctx.stroke();
+	ctx.closePath();
+	
 	line(x,y-25,x,y+25);
 	line(x-1,y-25,x-1,y+25);
 	ctx.fillStyle=c;

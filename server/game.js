@@ -1,5 +1,5 @@
 module.exports = game;
-function game(gid)
+function game(gid, rm)
 {
 	//private
 	var objects = [];
@@ -25,6 +25,7 @@ function game(gid)
 		
 		players.forEach(function (e)
 		{
+			
 			var data = {mode:canvasMode};			
 			if(canvasMode)
 			{
@@ -35,10 +36,12 @@ function game(gid)
 						{	
 
 							if(e.team == f.team && !f.taken)//home
-							{
+							{								
 								e.flags.forEach(function (g)
 								{
 									//console.log(g.x+" "+g.y);
+									e.user.score += 1;
+									rm.gm.onUserRoster(e.user.gid);
 									delete g.x;
 									delete g.y;
 									g.x = g.ox;
@@ -67,7 +70,6 @@ function game(gid)
 					{
 						if(e.flags.length > 0)
 						{
-							console.log("drop")	;
 							e.flags.forEach(function (g)
 							{
 								delete g.x;
@@ -81,7 +83,6 @@ function game(gid)
 						}
 						if(f.flags.length > 0)
 						{
-							console.log("drop")	;
 							f.flags.forEach(function (g)
 							{
 								delete g.x;
@@ -230,6 +231,14 @@ function game(gid)
 	}
 	function leave (user)
 	{		
+		players[user.id].flags.forEach(function (g)
+		{
+			delete g.x;
+			delete g.y;
+			g.x = g.ox;
+			g.y = g.oy;
+			g.taken = false;
+		});
 		delete players[user.id];
 		if(players.filter(function(value) { return value !== undefined }).length == 0)
 			close();
@@ -237,8 +246,8 @@ function game(gid)
 	function start()
 	{
 		state = "running";		
-		objects.push({type:"flag",ox:-200, oy:0, r:20,team:0,taken:false});
-		objects.push({type:"flag",ox:200, oy:0, r:20,team:1,taken:false});
+		objects.push({type:"flag",ox:-200, oy:0, r:40,team:0,taken:false});
+		objects.push({type:"flag",ox:200, oy:0, r:40,team:1,taken:false});
 		objects.forEach(function (e){init(e)});
 		timer = setInterval(function (){update()}, 10);
 		mode(true);

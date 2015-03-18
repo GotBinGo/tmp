@@ -37,7 +37,7 @@ function manager(rm)
 		console.log("group " + new_group.id + " was created");	
 		if(new_group.id != 0)
 		{
-			new_group.game = new rm.g(new_group.id);
+			new_group.game = new rm.g(new_group.id,rm);
 			join(user, new_group.id);
 		}
 	}
@@ -120,7 +120,7 @@ function manager(rm)
 	function list()
 	{
 		var tmp = [];
-			groups.forEach(function (e){if(e.id != 0)tmp.push({name:e.name,id:e.id,score:e.score})});	
+			groups.forEach(function (e){if(e.id != 0)tmp.push({name:e.name,id:e.id})});	
 		return JSON.stringify(tmp);
 	}
 	function listGroup(gid)
@@ -128,7 +128,7 @@ function manager(rm)
 		var tmp = [];
 	  	if(groups[gid] !== undefined)
 		{
-			groups[gid].users.forEach(function (e){tmp.push({name:e.name,id:e.id})});
+			groups[gid].users.forEach(function (e){tmp.push({name:e.name,id:e.id,score:(e.gid == 0 ? undefined : e.score)})});
 		}		
 		return JSON.stringify(tmp);
 	}
@@ -147,5 +147,6 @@ function manager(rm)
 	Object.defineProperty(this,"list", {writable: false, value: list});
 	Object.defineProperty(this,"listGroup", {writable: false, value: listGroup});
 	Object.defineProperty(this,"gameMessage", {writable: false, value: gameMessage});
+	Object.defineProperty(this,"onUserRoster", {writable: false, value: onUserRoster});
 	console.log("gm loaded");
 }

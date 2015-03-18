@@ -57,7 +57,7 @@ function onUserRoster(data)
 	for(var i = 0; i< arr.length; i ++)
 	{
 		var new_div = document.createElement("DIV");
-		var a = "<div style='margin-bottom:5px; width:100%; position:relative; box-sizing:border-box; padding:5px 5px 5px 5px; background-color:#333; color:#ddd'>"+arr[i].name+" "+ arr[i].score+"</div>";
+		var a = "<div style='margin-bottom:5px; width:100%; position:relative; box-sizing:border-box; padding:5px 5px 5px 5px; background-color:#333; color:#ddd'>"+arr[i].name+" "+ (arr[i].score === undefined ? " ":"Score: "+arr[i].score)+"</div>";
 		new_div.innerHTML = a;
 		//d_main_container.appendChild(new_div);
 		
