@@ -17,7 +17,7 @@ function onGameUpdate(m)
 		if(d_main_container.innerHTML.substring(1,7) != "canvas")
 		{
 			d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
-			window.setInterval(function(){draw();}, 20);
+			window.setInterval(function(){draw();}, 30);
 			c = document.getElementById("canvas");
 			ctx = c.getContext("2d");
 		}

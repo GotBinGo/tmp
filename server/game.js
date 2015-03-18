@@ -15,9 +15,63 @@ function game(gid, rm)
 	{
 		clearInterval(timer);
 	}
-	function gameUpdate()
+	function custcoll(m1, m2, R, e, f)
 	{
+		var mode = 'f';
+		var r1 = e.r;
+		var r2 = f.r;
+		var c = {e:e, f:f};
+		var x1 = e.px;
+		var y1 = e.py;
+		var x2 = f.px;		
+		var y2 = f.py;
 		
+		var vx1 = e.vx;
+		var vy1 = e.vy;
+		var vx2 = f.vx;		
+		var vy2 = f.vy;
+
+		var pi2=2*Math.acos(-1);
+		var r12=r1+r2;
+		var m21=m2/m1;
+		var x21=x2-x1;
+		var y21=y2-y1;
+		var vx21=vx2-vx1;
+		var vy21=vy2-vy1;
+		
+		var vx_cm = (m1*vx1+m2*vx2)/(m1+m2) ;
+		var vy_cm = (m1*vy1+m2*vy2)/(m1+m2) ;
+
+
+		if ( vx21==0 && vy21==0 ) 
+			return c;
+      
+		var gammav = Math.atan2(-vy21,-vx21);        
+		var d = Math.sqrt(x21*x21 +y21*y21);
+
+		var gammaxy=Math.atan2(y21,x21);
+		var dgamma=gammaxy-gammav;
+		if (dgamma>pi2) 
+			dgamma=dgamma-pi2;
+		else if (dgamma<-pi2) 
+			dgamma=dgamma+pi2;
+       var dr=d*Math.sin(dgamma)/r12;
+       var alpha=Math.asin(dr);
+       var a=Math.tan( gammav + alpha);
+
+       var dvx2=-2*(vx21 +a*vy21) /((1+a*a)*(1+m21));
+       
+       vx2=vx2+dvx2;
+       vy2=vy2+a*dvx2;
+       vx1=vx1-m21*dvx2;
+       vy1=vy1-a*m21*dvx2;
+       c.e.vx=(vx1-vx_cm)*R + vx_cm;
+       c.e.vy=(vy1-vy_cm)*R + vy_cm;
+       c.f.vx=(vx2-vx_cm)*R + vx_cm;
+       c.f.vy=(vy2-vy_cm)*R + vy_cm;
+	   //console.log(vx_cm + " " +vx1+ " " +R + " " + gammav);
+	   c.coll = true;
+		return c;
 	}
 	function update()
 	{	
@@ -32,8 +86,21 @@ function game(gid, rm)
 				var collx;
 				var colly;
 				var coll;
+				players.forEach(function (f)
+				{
+
+				});
 				objects.forEach(function (f)
-				{					
+				{
+					if(f.type == "circle")
+					{
+						if(inRange(f.x,f.y,f.r, e.px, e.py, e.r))
+						{
+							/*e.vx*= -1;
+							e.vy*= -1;*/
+						}
+					}
+					if(f.type == "wall")
 					{
 						e.vx = e.vx*(elapsed/1000);
 						e.vy = e.vy*(elapsed/1000);
@@ -58,10 +125,30 @@ function game(gid, rm)
 								f.x -= e.r;
 							}						
 						}
+						if(isHorizontal(f))
+						{
+							if(e.px+e.vx > f.x && e.px+e.vx <= f.x2)
+							{
+								f.y -= e.r;
+								if(e.py < f.y && e.py+e.vy >= f.y-1)
+								{
+									//e.px = f.x-Math.abs(e.px+e.vx-f.x);
+									e.vy = -Math.abs(e.vy);
+									colly = true;
+								}
+								f.y += 2*e.r;
+								if(e.py > f.y && e.py+e.vy <= f.y+1)
+								{
+									//e.px = f.x + Math.abs(e.px+e.vx-f.x);
+									e.vy = Math.abs(e.vy);
+									colly = true;
+								}
+								f.y -= e.r;
+							}						
+						}
 						e.vx = e.vx/(elapsed/1000);
 						e.vy = e.vy/(elapsed/1000);
-					}
-					
+					}					
 					if(f.type == "flag")
 						if(inRange(f.x,f.y,f.r, e.px, e.py, e.r)) 
 						{	
@@ -97,6 +184,31 @@ function game(gid, rm)
 				});
 				players.forEach(function (f)
 				{
+					if(f.user.id != e.user.id)
+					{
+						var dx = e.px-f.px;
+						var dy = e.py-f.py;
+						if(inRange(f.px,f.py,f.r, e.px, e.py, e.r))
+						{		
+							if(e.vx*dx+e.vy*dy <= 0)
+							{
+								var c = custcoll(1,1,1,e,f);	
+								coll = c.coll;
+								
+								e.vx = c.e.vx;
+								e.vy = c.e.vy;
+								f.vx = c.f.vx;
+								f.vy = c.f.vy;								
+			
+								e.px = c.e.px;
+								e.py = c.e.py;
+								f.px = c.f.px;
+								f.py = c.f.py;					
+							}
+						}
+					}
+									
+				
 					if(inRange(f.px,f.py,f.r, e.px, e.py, e.r) && e.team != f.team) //coll with flag
 					{
 						if(e.flags.length > 0)
@@ -156,7 +268,7 @@ function game(gid, rm)
 				e.vx += ex;
 				e.vy += ey;
 					
-					if(!collx && !coll)
+				if(!collx && !coll)
 				e.px += e.vx * elapsed/1000;
 					if(!colly && !coll)
 				e.py += e.vy * elapsed/1000;
@@ -295,7 +407,8 @@ function game(gid, rm)
 		objects.push({type:"flag",ox:-200, oy:0, r:40,team:0,taken:false});
 		objects.push({type:"flag",ox:200, oy:0, r:40,team:1,taken:false});
 		objects.push({type:"wall",x:0, y:0, x2:0, y2:100});
-		
+		objects.push({type:"wall",x:0, y:0, x2:100, y2:0});
+		objects.push({type:"circle",x:0, y:0, r:5});
 		objects.forEach(function (e){init(e)});
 		timer = setInterval(function (){update()}, 10);
 		mode(true);
