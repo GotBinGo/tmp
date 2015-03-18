@@ -29,8 +29,39 @@ function game(gid, rm)
 			var data = {mode:canvasMode};			
 			if(canvasMode)
 			{
+				var collx;
+				var colly;
+				var coll;
 				objects.forEach(function (f)
 				{					
+					{
+						e.vx = e.vx*(elapsed/1000);
+						e.vy = e.vy*(elapsed/1000);
+						if(isVertical(f))
+						{
+							if(e.py+e.vy > f.y && e.py+e.vy <= f.y2)
+							{
+								f.x -= e.r;
+								if(e.px < f.x && e.px+e.vx >= f.x-1)
+								{
+									//e.px = f.x-Math.abs(e.px+e.vx-f.x);
+									e.vx = -Math.abs(e.vx);
+									collx = true;
+								}
+								f.x += 2*e.r;
+								if(e.px > f.x && e.px+e.vx <= f.x+1)
+								{
+									//e.px = f.x + Math.abs(e.px+e.vx-f.x);
+									e.vx = Math.abs(e.vx);
+									collx = true;
+								}
+								f.x -= e.r;
+							}						
+						}
+						e.vx = e.vx/(elapsed/1000);
+						e.vy = e.vy/(elapsed/1000);
+					}
+					
 					if(f.type == "flag")
 						if(inRange(f.x,f.y,f.r, e.px, e.py, e.r)) 
 						{	
@@ -95,8 +126,7 @@ function game(gid, rm)
 							init(f);
 						}
 					}
-				});
-				
+				});				
 				
 				e.vx *= 0.97;
 				e.vy *= 0.97;
@@ -126,7 +156,9 @@ function game(gid, rm)
 				e.vx += ex;
 				e.vy += ey;
 					
+					if(!collx && !coll)
 				e.px += e.vx * elapsed/1000;
+					if(!colly && !coll)
 				e.py += e.vy * elapsed/1000;
 				
 				data.value = [];
@@ -194,6 +226,20 @@ function game(gid, rm)
 		});
 	}
 	//helper
+	function isHorizontal(a)
+	{
+		if(a.y == a.y2)
+			return true;
+		else
+			return false;
+	}
+	function isVertical(a)
+	{
+		if(a.x == a.x2)
+			return true;
+		else
+			return false;
+	}
 	function inRange(x1,y1,r1,x2,y2,r2)
 	{
 		
@@ -214,8 +260,7 @@ function game(gid, rm)
 			e.taken = false;
 		}
 		else if(e.type == "player")
-		{
-			
+		{			
 			e.px = 0;
 			e.py = 0;
 		}
@@ -243,11 +288,14 @@ function game(gid, rm)
 		if(players.filter(function(value) { return value !== undefined }).length == 0)
 			close();
 	}
+	
 	function start()
 	{
 		state = "running";		
 		objects.push({type:"flag",ox:-200, oy:0, r:40,team:0,taken:false});
 		objects.push({type:"flag",ox:200, oy:0, r:40,team:1,taken:false});
+		objects.push({type:"wall",x:0, y:0, x2:0, y2:100});
+		
 		objects.forEach(function (e){init(e)});
 		timer = setInterval(function (){update()}, 10);
 		mode(true);

@@ -55,13 +55,15 @@ function drawElement(e)
 			line(e.x, e.y, e.x+e.w, e.y+e.h);
 		else
 			line(e.x+width/2-posx, e.y+height/2-posy, e.x+width/2-posx+e.w, e.y+height/2-posy+e.h);
+	else if(e.type == "wall")
+			line(e.x+width/2-posx, e.y+height/2-posy, e.x2+width/2-posx, e.y2+height/2-posy);
 	else if(e.type == "text")
 		if(e.position == "absolute")
 			text(e.y, e.y, e.text);
 		else
 			text(e.x+width/2-posx, e.y+height/2-posy, e.text);
 	else if(e.type == "flag")
-		flag(e.x+width/2-posx, e.y+height/2-posy,e.r,e.team);
+		flag(e.x+width/2-posx, e.y+height/2-posy,e.r,e.team, !e.taken);
 	else if(e.type == "pos")
 	{
 		posx = e.x;
@@ -92,15 +94,17 @@ function circle(x,y,r,c)
 	ctx.closePath();
 	ctx.fillStyle="black";
 }
-function flag(x,y,r,team)
+function flag(x,y,r,team,s)
 {			
 	var c = team == 0 ? "red" : "blue";
 	//circle(x,y,r,"green");
+	if(s)
+	{
 		ctx.beginPath();
-	ctx.arc(x, y, r, 0, 2 * Math.PI, false);	
-	ctx.stroke();
-	ctx.closePath();
-	
+		ctx.arc(x, y, r, 0, 2 * Math.PI, false);	
+		ctx.stroke();
+		ctx.closePath();
+	}
 	line(x,y-25,x,y+25);
 	line(x-1,y-25,x-1,y+25);
 	ctx.fillStyle=c;
