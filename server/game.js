@@ -21,6 +21,7 @@ function game(gid, rm)
 		var r1 = e.r;
 		var r2 = f.r;
 		var c = {e:e, f:f};
+		
 		var x1 = e.px;
 		var y1 = e.py;
 		var x2 = f.px;		
@@ -57,7 +58,7 @@ function game(gid, rm)
 			dgamma=dgamma+pi2;
        var dr=d*Math.sin(dgamma)/r12;
        var alpha=Math.asin(dr);
-       var a=Math.tan( gammav + alpha);
+       var a=Math.tan(gammav + alpha);
 
        var dvx2=-2*(vx21 +a*vy21) /((1+a*a)*(1+m21));
        
@@ -65,6 +66,7 @@ function game(gid, rm)
        vy2=vy2+a*dvx2;
        vx1=vx1-m21*dvx2;
        vy1=vy1-a*m21*dvx2;
+	   //console.log(y2+""+x2);
        c.e.vx=(vx1-vx_cm)*R + vx_cm;
        c.e.vy=(vy1-vy_cm)*R + vy_cm;
        c.f.vx=(vx2-vx_cm)*R + vx_cm;
@@ -92,12 +94,29 @@ function game(gid, rm)
 				});
 				objects.forEach(function (f)
 				{
+					//console.log(objects.length);
 					if(f.type == "circle")
 					{
-						if(inRange(f.x,f.y,f.r, e.px, e.py, e.r))
+						var dx = e.px-f.x;
+						var dy = e.py-f.y;
+						var ds = dx*dx +dy*dy;
+						if(ds<(e.r+f.r)*(e.r+f.r))
 						{
-							/*e.vx*= -1;
-							e.vy*= -1;*/
+							var mag = e.vx*dx+e.vy*dy;
+							if(!(mag>0))
+							{
+								mag /= ds;
+								e.vx -= 1.7*dx*mag;
+								e.vy -= 1.7*dy*mag;
+								// e.vx = 0;
+								// e.vy = 0;
+								e.px += e.vx*(elapsed/1000);
+								e.py += e.vy*(elapsed/1000);
+								// e.px += e.vx;
+								// e.py += e.vy;
+
+								coll = true;
+							}
 						}
 					}
 					if(f.type == "wall")
@@ -125,7 +144,7 @@ function game(gid, rm)
 								f.x -= e.r;
 							}						
 						}
-						if(isHorizontal(f))
+						else if(isHorizontal(f))
 						{
 							if(e.px+e.vx > f.x && e.px+e.vx <= f.x2)
 							{
@@ -145,6 +164,10 @@ function game(gid, rm)
 								}
 								f.y -= e.r;
 							}						
+						}
+						else
+						{
+							throw "shit"
 						}
 						e.vx = e.vx/(elapsed/1000);
 						e.vy = e.vy/(elapsed/1000);
@@ -240,8 +263,8 @@ function game(gid, rm)
 					}
 				});				
 				
-				e.vx *= 0.97;
-				e.vy *= 0.97;
+				e.vx *= 0.985;
+				e.vy *= 0.985;
 				var ex = 0;
 				var ey = 0;
 				if(e.keys[0])
@@ -377,6 +400,31 @@ function game(gid, rm)
 			e.py = 0;
 		}
 	}
+	function vwall(x, y1, y2)
+	{
+			if(y1 > y2)
+			{
+				y1 ^= y2;
+				y2 ^= y1;
+				y1 ^= y2;
+			}
+			objects.push({type:"wall",x:x, y:y1, x2:x, y2:y2});
+			objects.push({type:"circle",x:x, y:y1, r:1});
+			objects.push({type:"circle",x:x, y:y2, r:1});
+			//objects.push({type:"wall",x:0, y:0, x2:0, y2:100});
+	}
+	function hwall(y, x1, x2)
+	{
+		if(x1 > x2)
+		{
+			x1 ^= x2;
+			x2 ^= x1;
+			x1 ^= x2;
+		}
+		objects.push({type:"wall",x:x1, y:y, x2:x2, y2:y});
+		objects.push({type:"circle",x:x1, y:y, r:1});
+		objects.push({type:"circle",x:x2, y:y, r:1});
+	}
 	//public
 	function join(user)
 	{			
@@ -400,15 +448,21 @@ function game(gid, rm)
 		if(players.filter(function(value) { return value !== undefined }).length == 0)
 			close();
 	}
-	
 	function start()
 	{
 		state = "running";		
-		objects.push({type:"flag",ox:-200, oy:0, r:40,team:0,taken:false});
-		objects.push({type:"flag",ox:200, oy:0, r:40,team:1,taken:false});
-		objects.push({type:"wall",x:0, y:0, x2:0, y2:100});
-		objects.push({type:"wall",x:0, y:0, x2:100, y2:0});
-		objects.push({type:"circle",x:0, y:0, r:5});
+		objects.push({type:"flag",ox:-600, oy:600, r:40,team:0,taken:false});
+		objects.push({type:"flag",ox:600, oy:-600, r:40,team:1,taken:false});
+		
+		hwall(-1000,-1000,1000);
+		vwall(-1000,-1000,1000);
+		vwall(1000,-1000,1000);
+		hwall(1000,-1000,1000);
+		
+		hwall(500,-800,-500);		
+		vwall(-500,800,500);		
+		hwall(-500,800,500);
+		vwall(500,-800,-500);
 		objects.forEach(function (e){init(e)});
 		timer = setInterval(function (){update()}, 10);
 		mode(true);
