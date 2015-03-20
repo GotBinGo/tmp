@@ -90,7 +90,11 @@ function game(gid, rm)
 				var coll;
 				players.forEach(function (f)
 				{
-
+					if(e.px == f.px && e.py == f.py && f.user.id != e.user.id)
+					{
+						e.px+= 1;
+						e.py+= 1;
+					}
 				});
 				objects.forEach(function (f)
 				{
@@ -103,7 +107,7 @@ function game(gid, rm)
 						if(ds<(e.r+f.r)*(e.r+f.r))
 						{
 							var mag = e.vx*dx+e.vy*dy;
-							if(!(mag>0))
+							if(!(mag>=0))
 							{
 								mag /= ds;
 								e.vx -= 1.7*dx*mag;

@@ -11,7 +11,7 @@ var ctx;
 function onGameUpdate(m)
 {
 	var data = JSON.parse(m);
-	console.log(m);
+	//console.log(m);
 	if(data.mode)
 	{
 		if(d_main_container.innerHTML.substring(1,7) != "canvas")
@@ -35,12 +35,49 @@ function draw()
 	if(d_main_container.innerHTML.substring(1,7) == "canvas")
 	{
 		clear();
-		
+
+
+		/*var ptrn = ctx.createPattern(document.getElementById("tile"), 'repeat'); // Create a pattern with this image, and set it to "repeat".
+		ctx.fillStyle = ptrn;
+		ctx.translate(-posx, -posy);
+		ctx.fillRect(0, 0, width, height);
+		ctx.translate(posx, posy);*/
+/*
+		ctx.fillStyle="white";
+		ctx.fillRect(width/2-posx,height/2-posy,width,height); 
+		ctx.fillStyle="black";*/
+		for(var i = 0; i < objects.length; i++)
+		{
+			drawElement(objects[i]);
+		}
+		/*
 		objects.forEach(function (e)
 		{			
 			drawElement(e);
-		});
+		});*/
+		var tm = ctx.globalCompositeOperation;
+		ctx.globalCompositeOperation='destination-over';
+		ctx.strokeStyle = 'rgba(70,70,255,0.3)';
+		for(var i = -1000; i <= 1000; i+= 100)
+		{
+			//for(var j = -800; j < 900; j+= 100)
+				line(i+width/2-posx, -1000+height/2-posy, i+width/2-posx, 1000+height/2-posy);
+				line(-1000+width/2-posx, i+height/2-posy, 1000+width/2-posx, i+height/2-posy);
+//				image(i,j);
+		}
+		ctx.fillStyle="#222";
+		 
+		ctx.fillRect(0,0,-1000+width/2-posx, height); 
+		ctx.fillRect(2000-posx,0,posx, height); 	
+		ctx.fillRect(0,0,width, -1000+height/2-posy);
+		ctx.fillRect(0,1000,width, height/2-posy);
 		
+		
+		ctx.fillStyle="#ddd";
+		ctx.fillRect(-1000+width/2-posx, -1000+height/2-posy, 2000, 2000); 
+		ctx.globalAlpha=1;
+		ctx.strokeStyle = 'rgba(0,0,0,1)';		
+		ctx.globalCompositeOperation = tm;
 	}
 }
 function drawElement(e)
@@ -71,7 +108,7 @@ function drawElement(e)
 	}
 }
 function line(x,y,x2,y2)
-{
+{	
 	ctx.beginPath();
 	ctx.moveTo(x,y);
 	ctx.lineTo(x2,y2);
@@ -83,6 +120,10 @@ function text(x, y, text)
   ctx.font = "20px arial";
   ctx.fillText(text, x, y);
 
+}
+function image(x,y)
+{			
+	ctx.drawImage(document.getElementById("tile"),x+width/2-posx,y+height/2-posy);
 }
 function circle(x,y,r,c)
 {			
@@ -112,6 +153,8 @@ function flag(x,y,r,team,s)
 	ctx.moveTo(x+20,y-10);
     ctx.lineTo(x,y-25);
     ctx.lineTo(x,y+5);
+	ctx.lineTo(x+20,y-10);
+	ctx.stroke();
 	ctx.closePath();
 	ctx.fill();
 
@@ -119,9 +162,11 @@ function flag(x,y,r,team,s)
 function clear()
 {
 	c.width = c.width;	
+	
+	/*
 	ctx.fillStyle="white";
-	ctx.globalAlpha=0.03;
+	//ctx.globalAlpha=0.03;
 	ctx.fillRect(0,0,width,height); 
 	ctx.globalAlpha=1;
-
+*/
 }
