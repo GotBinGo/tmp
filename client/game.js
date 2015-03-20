@@ -17,7 +17,7 @@ function onGameUpdate(m)
 		if(d_main_container.innerHTML.substring(1,7) != "canvas")
 		{
 			d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
-			window.setInterval(function(){draw();}, 30);
+			window.setInterval(function(){draw();}, 10);
 			c = document.getElementById("canvas");
 			ctx = c.getContext("2d");
 		}
@@ -46,23 +46,19 @@ function draw()
 		ctx.fillStyle="white";
 		ctx.fillRect(width/2-posx,height/2-posy,width,height); 
 		ctx.fillStyle="black";*/
+
 		for(var i = 0; i < objects.length; i++)
 		{
 			drawElement(objects[i]);
 		}
-		/*
-		objects.forEach(function (e)
-		{			
-			drawElement(e);
-		});*/
 		var tm = ctx.globalCompositeOperation;
 		ctx.globalCompositeOperation='destination-over';
 		ctx.strokeStyle = 'rgba(70,70,255,0.3)';
 		for(var i = -1000; i <= 1000; i+= 100)
 		{
 			//for(var j = -800; j < 900; j+= 100)
-				line(i+width/2-posx, -1000+height/2-posy, i+width/2-posx, 1000+height/2-posy);
-				line(-1000+width/2-posx, i+height/2-posy, 1000+width/2-posx, i+height/2-posy);
+				line(i+width/2-posx, -1000+height/2-posy, i+width/2-posx, 1000+height/2-posy,5);
+				line(-1000+width/2-posx, i+height/2-posy, 1000+width/2-posx, i+height/2-posy,5);
 //				image(i,j);
 		}
 		ctx.fillStyle="#222";
@@ -78,6 +74,12 @@ function draw()
 		ctx.globalAlpha=1;
 		ctx.strokeStyle = 'rgba(0,0,0,1)';		
 		ctx.globalCompositeOperation = tm;
+		/*
+		objects.forEach(function (e)
+		{			
+			drawElement(e);
+		});*/
+
 	}
 }
 function drawElement(e)
@@ -93,12 +95,12 @@ function drawElement(e)
 		else
 			line(e.x+width/2-posx, e.y+height/2-posy, e.x+width/2-posx+e.w, e.y+height/2-posy+e.h);
 	else if(e.type == "wall")
-			line(e.x+width/2-posx, e.y+height/2-posy, e.x2+width/2-posx, e.y2+height/2-posy);
+			line(e.x+width/2-posx, e.y+height/2-posy, e.x2+width/2-posx, e.y2+height/2-posy, 5);
 	else if(e.type == "text")
 		if(e.position == "absolute")
-			text(e.y, e.y, e.text);
+			text(e.x, e.y, e.text, e.size, e.color, e.align);
 		else
-			text(e.x+width/2-posx, e.y+height/2-posy, e.text);
+			text(e.x+width/2-posx, e.y+height/2-posy, e.text, e.size, e.color, e.align);
 	else if(e.type == "flag")
 		flag(e.x+width/2-posx, e.y+height/2-posy,e.r,e.team, !e.taken);
 	else if(e.type == "pos")
@@ -107,18 +109,34 @@ function drawElement(e)
 		posy = e.y;
 	}
 }
-function line(x,y,x2,y2)
+function line(x,y,x2,y2,w)
 {	
+
+	if(w == undefined)
+		w = 1;
+	ctx.lineWidth = w;
+	
 	ctx.beginPath();
 	ctx.moveTo(x,y);
 	ctx.lineTo(x2,y2);
 	ctx.closePath();
 	ctx.stroke();
+	ctx.lineWidth = 1;
 }
-function text(x, y, text)
+function text(x, y, text, size, color, align)
 {
-  ctx.font = "20px arial";
-  ctx.fillText(text, x, y);
+	if(align == "center")
+		ctx.textAlign = 'center';
+	else
+		ctx.textAlign = 'start';
+	if(color == undefined)
+		color = "black";
+	ctx.fillStyle = color;
+	if(size == undefined)
+		size = 20;
+	ctx.font = size+"px arial";
+	ctx.fillText(text, x, y);
+	//ctx.fillText(text, x, y);
 
 }
 function image(x,y)

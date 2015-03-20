@@ -267,8 +267,8 @@ function game(gid, rm)
 					}
 				});				
 				
-				e.vx *= 0.985;
-				e.vy *= 0.985;
+				e.vx *= 0.99;
+				e.vy *= 0.99;
 				var ex = 0;
 				var ey = 0;
 				if(e.keys[0])
@@ -310,11 +310,18 @@ function game(gid, rm)
 					data.value.push({type:"circle",x:f.px,y:f.py,r:30,c:f.team==0 ? "red" : "blue"});
 					data.value.push({type:"text",x:f.px,y:f.py,text:f.user.name});
 				});
+				
 				objects.forEach(function (f)
 				{
 					data.value.push(f);
 					//data.value.push({type:"text",x:f.px,y:f.py,text:f.user.name});
 				});
+				var ssum = 0;
+				team(0).forEach(function (e){ssum+= e.user.score});
+				data.value.push({type:"text",x:900,y:100,text:ssum,position:"absolute",size:100, color:"red", align:"center"});
+				ssum = 0;
+				team(1).forEach(function (e){ssum+= e.user.score});
+				data.value.push({type:"text",x:1100,y:100,text:ssum,position:"absolute",size:100, color:"blue", align:"center"});
 			}
 			else
 			{			
@@ -440,6 +447,7 @@ function game(gid, rm)
 	}
 	function leave (user)
 	{		
+		players[user.id].user.score = 0;
 		players[user.id].flags.forEach(function (g)
 		{
 			delete g.x;
@@ -455,18 +463,18 @@ function game(gid, rm)
 	function start()
 	{
 		state = "running";		
-		objects.push({type:"flag",ox:-600, oy:600, r:40,team:0,taken:false});
-		objects.push({type:"flag",ox:600, oy:-600, r:40,team:1,taken:false});
-		
+		objects.push({type:"flag",ox:-550, oy:550, r:40,team:0,taken:false});
+		objects.push({type:"flag",ox:550, oy:-550, r:40,team:1,taken:false});
+		objects.push({type:"circle",x:0, y:0, r:40});
 		hwall(-1000,-1000,1000);
 		vwall(-1000,-1000,1000);
 		vwall(1000,-1000,1000);
 		hwall(1000,-1000,1000);
 		
-		hwall(500,-800,-500);		
-		vwall(-500,800,500);		
-		hwall(-500,800,500);
-		vwall(500,-800,-500);
+		hwall(400,-800,-400);		
+		vwall(-400,800,400);		
+		hwall(-400,800,400);
+		vwall(400,-800,-400);
 		objects.forEach(function (e){init(e)});
 		timer = setInterval(function (){update()}, 10);
 		mode(true);
