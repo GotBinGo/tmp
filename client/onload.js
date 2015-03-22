@@ -1,5 +1,6 @@
 window.onload = function()
 {
+	onResize();
 	console.log("loaded");
 	d_messages = document.getElementById('messages');
 	d_main_container = document.getElementById('main_container');

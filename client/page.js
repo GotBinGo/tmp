@@ -3,6 +3,37 @@ var pageleave = false;
 window.addEventListener("beforeunload", function (event) {
 	pageleave = true;
 });
+var down = false;
+function mdown(evt)
+{
+	var d = document.getElementById('drag');
+	down = true;
+}
+function mup(evt)
+{
+	down = false;
+}
+function mmove(evt)
+{
+	var y = evt.clientY;
+	var d = document.getElementById('drag');
+	if(down)
+	{
+		if(document.body.clientHeight-120 < y ) 
+			y = document.body.clientHeight-120;
+		if(y < 200)
+			y = 200;
+			
+		//console.log(y);
+		d.style.top = y-6;
+		var b = document.getElementById('bottom');
+		b.style.height = document.body.clientHeight-y-18;
+		var m = document.getElementById('main');
+		m.style.height = y-20;
+	}
+	evt.preventDefault();
+	return false;
+}
 function focusIf(input)
 {
 	if(getSelectionText() == "")
@@ -87,6 +118,22 @@ function onGroupRoster(data)
 	//console.log(a);				
 }
 //keys
+function onResize(e)
+{	
+	
+	var b = document.getElementById('bottom');
+	var m = document.getElementById('main');
+	console.log(b.clientHeight);
+	m.style.height = window.innerHeight-38 - b.clientHeight;
+	var d = document.getElementById('drag');
+	d.style.top = window.innerHeight-24 - b.clientHeight;
+/*
+	var c = document.getElementById('canvas');
+	c.width = document.getElementById('main_container').clientWidth*2;
+	c.height = document.getElementById('main_container').clientHeight*2;
+	width = c.width;
+	height = c.height;*/
+}
 var keys = [false, false, false, false];
 function onKeyDown(e)
 {

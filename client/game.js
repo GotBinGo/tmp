@@ -17,7 +17,8 @@ function onGameUpdate(m)
 		if(d_main_container.innerHTML.substring(1,7) != "canvas")
 		{
 			d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
-			window.setInterval(function(){draw();}, 10);
+			onResize();
+			window.setInterval(function(){draw();}, 20);
 			c = document.getElementById("canvas");
 			ctx = c.getContext("2d");
 		}
@@ -61,13 +62,14 @@ function draw()
 				line(-1000+width/2-posx, i+height/2-posy, 1000+width/2-posx, i+height/2-posy,5);
 //				image(i,j);
 		}
+		/*
 		ctx.fillStyle="#222";
 		 
 		ctx.fillRect(0,0,-1000+width/2-posx, height); 
 		ctx.fillRect(2000-posx,0,posx, height); 	
 		ctx.fillRect(0,0,width, -1000+height/2-posy);
 		ctx.fillRect(0,1000,width, height/2-posy);
-		
+		*/
 		
 		ctx.fillStyle="#ddd";
 		ctx.fillRect(-1000+width/2-posx, -1000+height/2-posy, 2000, 2000); 
