@@ -1,6 +1,7 @@
 var posx = 0;
 var posy = 0;
 var selfid = -1;
+var mul = 1;
 var width = 2000;
 var height = 1000;
 var objects = [];
@@ -16,9 +17,11 @@ function onGameUpdate(m)
 	{
 		if(d_main_container.innerHTML.substring(1,7) != "canvas")
 		{
-			d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
+			//d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='box-shadow: 0px 0px 100px #fff; max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
+			d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='box-shadow: 0px 10px 6px -6px #000; max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
+			 
 			onResize();
-			window.setInterval(function(){draw();}, 20);
+			window.setInterval(function(){draw();}, 15);
 			c = document.getElementById("canvas");
 			ctx = c.getContext("2d");
 		}
@@ -36,8 +39,17 @@ function draw()
 	if(d_main_container.innerHTML.substring(1,7) == "canvas")
 	{
 		clear();
-
-
+		//ctx.translate(width, height);
+		
+				
+		
+		ctx.translate(width/2,height/2);
+		ctx.scale(1/mul,1/mul);
+		ctx.translate(-width/2,-height/2);
+		/*
+		ctx.scale(1/mul,1/mul);
+		ctx.translate(width/2,height/2);
+		*/
 		/*var ptrn = ctx.createPattern(document.getElementById("tile"), 'repeat'); // Create a pattern with this image, and set it to "repeat".
 		ctx.fillStyle = ptrn;
 		ctx.translate(-posx, -posy);
@@ -47,7 +59,7 @@ function draw()
 		ctx.fillStyle="white";
 		ctx.fillRect(width/2-posx,height/2-posy,width,height); 
 		ctx.fillStyle="black";*/
-
+		//text(0, 50, "Tomi", 50, "red");
 		for(var i = 0; i < objects.length; i++)
 		{
 			drawElement(objects[i]);
@@ -70,9 +82,12 @@ function draw()
 		ctx.fillRect(0,0,width, -1000+height/2-posy);
 		ctx.fillRect(0,1000,width, height/2-posy);
 		*/
-		
+
 		ctx.fillStyle="#ddd";
-		ctx.fillRect(-1000+width/2-posx, -1000+height/2-posy, 2000, 2000); 
+		ctx.fillRect(-1000+width/2-posx, -1000+height/2-posy, 2000, 2000);
+		ctx.fillStyle="#333";
+		ctx.fillRect(-2000+width/2-posx, -2000+height/2-posy, 4000, 4000); 
+		
 		ctx.globalAlpha=1;
 		ctx.strokeStyle = 'rgba(0,0,0,1)';		
 		ctx.globalCompositeOperation = tm;
@@ -81,7 +96,7 @@ function draw()
 		{			
 			drawElement(e);
 		});*/
-
+		$('#canvas').css('transform',' perspective(1500px)   rotate3d(1,0,0,30deg)translate3d(0,-20px,0)');
 	}
 }
 function drawElement(e)
@@ -100,7 +115,7 @@ function drawElement(e)
 			line(e.x+width/2-posx, e.y+height/2-posy, e.x2+width/2-posx, e.y2+height/2-posy, 5);
 	else if(e.type == "text")
 		if(e.position == "absolute")
-			text(e.x, e.y, e.text, e.size, e.color, e.align);
+			text(e.x*width/2000, e.y/*-height/mul*/, e.text, e.size, e.color, e.align);
 		else
 			text(e.x+width/2-posx, e.y+height/2-posy, e.text, e.size, e.color, e.align);
 	else if(e.type == "flag")
@@ -147,6 +162,12 @@ function image(x,y)
 }
 function circle(x,y,r,c)
 {			
+	if(r > 10)
+	{	
+		ctx.shadowBlur = 5;
+		ctx.shadowOffsetY = 5;
+	}
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
 	ctx.beginPath();
 	ctx.fillStyle=c;
 	ctx.arc(x, y, r, 0, 2 * Math.PI, false);	
@@ -154,9 +175,12 @@ function circle(x,y,r,c)
 	//ctx.stroke();
 	ctx.closePath();
 	ctx.fillStyle="black";
+	ctx.shadowBlur = 0;
+	ctx.shadowOffsetY = 0;
 }
 function flag(x,y,r,team,s)
 {			
+
 	var c = team == 0 ? "red" : "blue";
 	//circle(x,y,r,"green");
 	if(s)

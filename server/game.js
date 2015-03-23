@@ -78,7 +78,7 @@ function game(gid, rm)
 	function update()
 	{	
 		var elapsed = Date.now()-last_time+0.00001;
-		
+
 		players.forEach(function (e)
 		{
 			
@@ -279,6 +279,7 @@ function game(gid, rm)
 					ex+=5;
 				if(e.keys[3])
 					ey+=5;
+				
 				//console.log(e.keys);
 				var length = Math.sqrt(ex * ex + ey * ey);
 				if(length != 0)
@@ -291,9 +292,13 @@ function game(gid, rm)
 					// increase vector size
 					ex *= 5;
 					ey *= 5;
-				}
+				}				
+				
+				
 				e.vx += ex;
 				e.vy += ey;
+				
+
 					
 				if(!collx && !coll)
 				e.px += e.vx * elapsed/1000;
@@ -308,7 +313,7 @@ function game(gid, rm)
 				players.forEach(function (f)
 				{
 					data.value.push({type:"circle",x:f.px,y:f.py,r:30,c:f.team==0 ? "red" : "blue"});
-					data.value.push({type:"text",x:f.px,y:f.py,text:f.user.name});
+					data.value.push({type:"text",x:f.px+15,y:f.py-25,text:f.user.name});
 				});
 				
 				objects.forEach(function (f)
@@ -322,6 +327,7 @@ function game(gid, rm)
 				ssum = 0;
 				team(1).forEach(function (e){ssum+= e.user.score});
 				data.value.push({type:"text",x:1100,y:100,text:ssum,position:"absolute",size:100, color:"blue", align:"center"});
+
 			}
 			else
 			{			
@@ -336,7 +342,7 @@ function game(gid, rm)
 				{
 					data.value += f.user.name;
 				});
-				data.value += "<br>"
+				data.value += "<br>";				
 				team(1).forEach(function (f)
 				{
 					data.value += f.user.name;
@@ -465,7 +471,8 @@ function game(gid, rm)
 		state = "running";		
 		objects.push({type:"flag",ox:-550, oy:550, r:40,team:0,taken:false});
 		objects.push({type:"flag",ox:550, oy:-550, r:40,team:1,taken:false});
-		objects.push({type:"circle",x:0, y:0, r:40});
+		//objects.push({type:"circle",x:0, y:0, r:40});
+		
 		hwall(-1000,-1000,1000);
 		vwall(-1000,-1000,1000);
 		vwall(1000,-1000,1000);

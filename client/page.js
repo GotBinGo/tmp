@@ -102,11 +102,22 @@ function onUserRoster(data)
 			d_info_area_container.appendChild(new_div);
 	}		
 }
+function helper()
+{
+	ws.send("/g c " + document.getElementById("gname").value);
+}
 function onGroupRoster(data)
 {
-	//console.log("ogrc " + data);
+	//console.log("ogrc " + data);	
 	var arr = JSON.parse(data);
-	d_main_container.innerHTML = "";
+	d_main_container.innerHTML = "";	
+	
+	var new_div = document.createElement("DIV");
+	var a = "<div style='margin-bottom:5px; width:100%; height:50px; position:relative; box-sizing:border-box; padding:10px 105px 5px 5px; background-color:#333; color:#ddd'><h3 style='margin:0;'>Create room: <input id='gname' style='background:grey; border:none; color:#DDD; font-size: 16px;padding-left: 3px;padding-top: 2px;padding-bottom: 2px;'></input></h3><div style='position:absolute; top:0;bottom:0;right:0;width:100px;'><input type='button' value='Create' onclick='helper();'style='width: 100%; height:100%;'/></div></div>";
+	new_div.innerHTML = a;
+	d_main_container.appendChild(new_div);
+	
+	
 	for(var i = 0; i< arr.length; i ++)
 	{
 		var new_div = document.createElement("DIV");
