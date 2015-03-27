@@ -9,6 +9,7 @@ var posx;
 var posy;
 var c;
 var ctx;
+var rot = 40;
 function onGameUpdate(m)
 {
 	var data = JSON.parse(m);
@@ -40,8 +41,8 @@ function draw()
 	{
 		clear();
 		//ctx.translate(width, height);
-		
-				
+		rot -= 0.3;
+		document.title = c.offsetWidth;
 		
 		ctx.translate(width/2,height/2);
 		ctx.scale(1/mul,1/mul);
@@ -60,13 +61,21 @@ function draw()
 		ctx.fillRect(width/2-posx,height/2-posy,width,height); 
 		ctx.fillStyle="black";*/
 		//text(0, 50, "Tomi", 50, "red");
+		hole(200, 200);
 		for(var i = 0; i < objects.length; i++)
 		{
 			drawElement(objects[i]);
 		}
+				//
+		//line(0+width/2-posx, 0+height/2-posy, 100+width/2-posx, 100+height/2-posy,5);
+		
+		
+		//
+		
 		var tm = ctx.globalCompositeOperation;
 		ctx.globalCompositeOperation='destination-over';
 		ctx.strokeStyle = 'rgba(70,70,255,0.3)';
+
 		for(var i = -1000; i <= 1000; i+= 100)
 		{
 			//for(var j = -800; j < 900; j+= 100)
@@ -140,6 +149,25 @@ function line(x,y,x2,y2,w)
 	ctx.stroke();
 	ctx.lineWidth = 1;
 }
+function hole(x, y)
+{
+		ctx.translate(x+width/2-posx,y+height/2-posy);
+		var numb = 30;
+		for(var i = 0; i < numb;i ++)
+		{
+			ctx.rotate((360/numb*i+rot)*(Math.PI/180))
+			ctx.beginPath();
+			ctx.moveTo(0, 0);		
+			ctx.bezierCurveTo(0, -50,25, -50,50, 100);
+			ctx.lineWidth = 5;
+
+			ctx.strokeStyle = 'black';
+			ctx.stroke();
+			ctx.rotate((-360/numb*i-rot)*(Math.PI/180))
+		}
+		ctx.translate(-(x+width/2-posx),-(y+height/2-posy));
+
+}
 function text(x, y, text, size, color, align)
 {
 	if(align == "center")
@@ -182,6 +210,7 @@ function flag(x,y,r,team,s)
 {			
 
 	var c = team == 0 ? "red" : "blue";
+	ctx.lineWidth = 1;
 	//circle(x,y,r,"green");
 	if(s)
 	{
