@@ -9,6 +9,11 @@ var posx;
 var posy;
 var c;
 var ctx;
+var c2;
+var ctx2;
+var c3;
+var ctx3;
+var tmp = posy;
 function onGameUpdate(m)
 {
 	var data = JSON.parse(m);
@@ -17,13 +22,20 @@ function onGameUpdate(m)
 	{
 		if(d_main_container.innerHTML.substring(1,7) != "canvas")
 		{
-			//d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='box-shadow: 0px 0px 100px #fff; max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
-			d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='box-shadow: 0px 10px 6px -6px #000; max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
+			
+			//d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='box-shadow: 0px 10px 6px -6px #000; max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
+			d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='box-shadow: 0px 10px 6px -6px #000;  position:absolute; border:1px solid #000000;'>></canvas>";
+			d_main_container.innerHTML += "<canvas id='canvas2' width='"+width+"' height='"+height+"' style='box-shadow: 0px 10px 6px -6px #000; position:absolute; border:1px solid #000000;'>></canvas>";
+			d_main_container.innerHTML += "<canvas id='canvas3' width='"+width+"' height='"+height+"' style='box-shadow: 0px 10px 6px -6px #000; position:absolute; border:1px solid #000000;'>></canvas>";
 			 
 			onResize();
 			window.setInterval(function(){draw();}, 15);
 			c = document.getElementById("canvas");
 			ctx = c.getContext("2d");
+			c2 = document.getElementById("canvas2");
+			ctx2 = c2.getContext("2d");
+			c3 = document.getElementById("canvas3");
+			ctx3 = c3.getContext("2d");
 		}
 
 		objects = data.value;
@@ -39,6 +51,19 @@ function draw()
 	if(d_main_container.innerHTML.substring(1,7) == "canvas")
 	{
 		clear();
+		tmp = posy-550;
+		tmp2 = posy+550;
+		
+		//tmp--;
+		
+		ctx2.fillStyle="white";
+		ctx2.fillRect((-posx+400),400, 100, 100); 
+		
+		ctx3.fillStyle="white";
+		//ctx3.fillRect(-posx+1500,400, 100, 100); 
+		flag(-posx+1550,475,40,1,20, ctx3)
+		
+		//flag(,400, 100, 100,ctx3); 
 		//ctx.translate(width, height);
 		
 				
@@ -96,7 +121,12 @@ function draw()
 		{			
 			drawElement(e);
 		});*/
-		$('#canvas').css('transform',' perspective(1500px)   rotate3d(1,0,0,30deg)translate3d(0,-20px,0)');
+		$('#canvas').css('transform',' perspective(1500px)   rotate3d(1,0,0,70deg)translate3d(0,0px,0)');
+		//tmp = 200;
+		$('#canvas2').css('transform',' perspective(1500px)  translate3d(0,'+-tmp/2+'px,'+-tmp+'px) rotate3d(1,0,0,-30deg) translate3d(0px,'+tmp/8+'px,'+tmp/8+'px)');
+		$('#canvas3').css('transform',' perspective(1500px)  translate3d(0,'+-tmp2/2+'px,'+-tmp2+'px) rotate3d(1,0,0,-30deg) translate3d(0px,'+tmp2/8+'px,'+tmp2/8+'px)');
+	
+		//document.title = tmp;
 	}
 }
 function drawElement(e)
@@ -126,19 +156,19 @@ function drawElement(e)
 		posy = e.y;
 	}
 }
-function line(x,y,x2,y2,w)
+function line(x,y,x2,y2,w, c)
 {	
-
+	if(c==undefined)
+		c = ctx;
 	if(w == undefined)
 		w = 1;
-	ctx.lineWidth = w;
-	
-	ctx.beginPath();
-	ctx.moveTo(x,y);
-	ctx.lineTo(x2,y2);
-	ctx.closePath();
-	ctx.stroke();
-	ctx.lineWidth = 1;
+	c.lineWidth = w;	
+	c.beginPath();
+	c.moveTo(x,y);
+	c.lineTo(x2,y2);
+	c.closePath();
+	c.stroke();
+	c.lineWidth = 1;
 }
 function text(x, y, text, size, color, align)
 {
@@ -178,34 +208,44 @@ function circle(x,y,r,c)
 	ctx.shadowBlur = 0;
 	ctx.shadowOffsetY = 0;
 }
-function flag(x,y,r,team,s)
-{			
-
-	var c = team == 0 ? "red" : "blue";
+function flag(x,y,r,team,s, cc)
+{	
+	var c = cc;
+	if (cc === undefined)
+		c = ctx; 
+		
+		
+	var col = team == 0 ? "red" : "blue";
 	//circle(x,y,r,"green");
-	if(s)
+	if(s && cc === undefined)
 	{
-		ctx.beginPath();
-		ctx.arc(x, y, r, 0, 2 * Math.PI, false);	
-		ctx.stroke();
-		ctx.closePath();
+		c.beginPath();
+		c.arc(x, y, r, 0, 2 * Math.PI, false);	
+		c.stroke();
+		c.closePath();
 	}
-	line(x,y-25,x,y+25);
-	line(x-1,y-25,x-1,y+25);
-	ctx.fillStyle=c;
-	ctx.beginPath();	
-	ctx.moveTo(x+20,y-10);
-    ctx.lineTo(x,y-25);
-    ctx.lineTo(x,y+5);
-	ctx.lineTo(x+20,y-10);
-	ctx.stroke();
-	ctx.closePath();
-	ctx.fill();
+	else
+	{
+		line(x,y-25,x,y+25,2,c);
+		line(x-1,y-25,x-1,y+25,2,c);
+		c.fillStyle=col;
+		c.beginPath();	
+		c.moveTo(x+20,y-10);
+		c.lineTo(x,y-25);
+		c.lineTo(x,y+5);
+		c.lineTo(x+20,y-10);
+		c.stroke();
+		c.closePath();
+		c.fill();
+	}
 
 }
 function clear()
 {
-	c.width = c.width;	
+	c.width = c.width;
+	c2.width = c.offsetWidth;
+	c3.width = c.offsetWidth;
+	//c3.width = c.style.width;
 	
 	/*
 	ctx.fillStyle="white";
