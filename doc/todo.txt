@@ -3,3 +3,4 @@ list users, list rooms
 
 room pass
 scores
+ping

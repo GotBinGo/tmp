@@ -8,7 +8,7 @@ function manager(rm)
 	//pirvate---------------
 	var groups = [];
 	var group_counter = 0;
-	function onUserRoster(gid)
+	function onUserRoster(gid) //or not so private
 	{		
 		send(gid, "/ourc "+JSON.stringify([{name:groups[gid].name}].concat(JSON.parse(listGroup(gid)))))
 	}
