@@ -21,18 +21,21 @@ function onGameUpdate(m)
 			//d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='box-shadow: 0px 0px 100px #fff; max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
 			d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='box-shadow: 0px 10px 6px -6px #000; max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
 			 
-			onResize();
-			window.setInterval(function(){draw();}, 15);
+			onResize();			
+			//window.setInterval(function(){draw();}, 15);
 			c = document.getElementById("canvas");
 			ctx = c.getContext("2d");
+			draw();
+			
 		}
-
+		
 		objects = data.value;
 	}
 	else
 	{
 		d_main_container.innerHTML = data.value;
 	}
+	
 }
 
 function draw()
@@ -42,7 +45,7 @@ function draw()
 		clear();
 		//ctx.translate(width, height);
 		rot -= 0.3;
-		document.title = c.offsetWidth;
+		//document.title = c.offsetWidth;
 		
 		ctx.translate(width/2,height/2);
 		ctx.scale(1/mul,1/mul);
@@ -106,7 +109,9 @@ function draw()
 			drawElement(e);
 		});*/
 		$('#canvas').css('transform',' perspective(1500px)   rotate3d(1,0,0,30deg)translate3d(0,-20px,0)');
+		window.requestAnimationFrame(draw);
 	}
+	
 }
 function drawElement(e)
 {	
