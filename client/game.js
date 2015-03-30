@@ -65,6 +65,11 @@ function draw()
 		ctx.fillStyle="black";*/
 		//text(0, 50, "Tomi", 50, "red");
 		hole(200, 200);
+		
+		hole(400, 200);
+		hole(200, 400);
+		hole(400, 400);
+		hole(300, 300);
 		for(var i = 0; i < objects.length; i++)
 		{
 			drawElement(objects[i]);
@@ -156,22 +161,25 @@ function line(x,y,x2,y2,w)
 }
 function hole(x, y)
 {
+	
 		ctx.translate(x+width/2-posx,y+height/2-posy);
-		var numb = 30;
+		var numb = 20;
 		for(var i = 0; i < numb;i ++)
 		{
+			ctx.translate(0.5, 0.5);
 			ctx.rotate((360/numb*i+rot)*(Math.PI/180))
 			ctx.beginPath();
 			ctx.moveTo(0, 0);		
-			ctx.bezierCurveTo(0, -50,25, -50,50, 100);
+			ctx.bezierCurveTo(-35, -35,95, -70,50, 100);
 			ctx.lineWidth = 5;
 
 			ctx.strokeStyle = 'black';
 			ctx.stroke();
 			ctx.rotate((-360/numb*i-rot)*(Math.PI/180))
+			ctx.translate(-0.5, -0.5);
 		}
 		ctx.translate(-(x+width/2-posx),-(y+height/2-posy));
-
+		
 }
 function text(x, y, text, size, color, align)
 {
@@ -184,7 +192,7 @@ function text(x, y, text, size, color, align)
 	ctx.fillStyle = color;
 	if(size == undefined)
 		size = 20;
-	ctx.font = size+"px arial";
+	ctx.font = "bold "+size+"px arial";
 	ctx.fillText(text, x, y);
 	//ctx.fillText(text, x, y);
 
