@@ -1,3 +1,6 @@
 ujrahasznalhatosag, chat
 platform
 fejlesztokorny
+
+meg lehetne
+a kliens es a szerver is js
