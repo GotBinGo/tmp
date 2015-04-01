@@ -10,9 +10,10 @@ window.onload = function()
 	var start = function () {
 		window.open = false;	
 		var wsImpl = window.WebSocket || window.MozWebSocket;           
-		//window.ws = new wsImpl('ws://s13.webtar.hu:80/');
-		window.ws = new wsImpl('ws://192.168.15.106:80');
-
+//		window.ws = new wsImpl('ws://s13.webtar.hu:80/');
+		//window.ws = new wsImpl('ws://192.168.15.106:80');
+		window.ws = new wsImpl('ws://localhost:80/');
+		
 		ws.onmessage = function (evt) 
 		{
 			//console.log(evt.data);

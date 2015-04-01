@@ -13,6 +13,7 @@ function start(port,rm)
 		console.log("error");		
 		console.log("\t" + ws.code);		
 	});
+	var names = ["Tomi", "Bubu", "Balu", "Bence", "Bálint"]
 	wss.on('connection', function(ws) 
 	{
 		//console.log("connect" + socket_counter)
@@ -22,7 +23,7 @@ function start(port,rm)
 		var new_user = {};
 		new_user.ws = ws;
 		new_user.id = ws.id;
-		new_user.name = ws.id;
+		new_user.name = names[ws.id%5];
 		new_user.score = 0;
 
 		ws.on('message', function(message) 

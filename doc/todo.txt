@@ -4,3 +4,5 @@ list users, list rooms
 room pass
 scores
 ping
+exit button
+lgoin
