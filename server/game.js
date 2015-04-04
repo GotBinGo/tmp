@@ -78,10 +78,10 @@ function game(gid, rm)
 	function update()
 	{	
 		var elapsed = Date.now()-last_time+0.00001;
-
+		
 		players.forEach(function (e)
 		{
-			
+			//console.log(e.r);
 			var data = {mode:canvasMode};			
 			if(canvasMode)
 			{
@@ -171,14 +171,14 @@ function game(gid, rm)
 						}
 						else
 						{
-							throw "shit"
+							//throw "shit"
 						}
 						e.vx = e.vx/(elapsed/1000);
 						e.vy = e.vy/(elapsed/1000);
 					}					
 					if(f.type == "flag")
 						if(inRange(f.x,f.y,f.r, e.px, e.py, e.r)) 
-						{	
+						{
 
 							if(e.team == f.team && !f.taken)//home
 							{								
@@ -200,7 +200,7 @@ function game(gid, rm)
 							else if(e.team != f.team && !f.taken)//pickup
 							{
 								Object.defineProperty(f, "x", { get: function () { return e.px; } });
-								Object.defineProperty(f, "y", { get: function () { return e.py; } });
+								Object.defineProperty(f, "y", { get: function () { return e.py-22.5-12; } });
 								e.flags.push(f);
 								//f.x = e.px
 								//f.y = e.py
@@ -208,6 +208,26 @@ function game(gid, rm)
 							}
 
 						}
+					if(f.type == "hole")
+						if(inRange(f.x,f.y,f.r, e.px, e.py, e.r)) 
+						{
+						
+							var dx = (f.x-e.px);		
+							var dy = (f.y-e.py);
+					
+							e.vy += dx/30;							
+							e.vx -= dy/30;		
+							e.vx += dx/18;
+							e.vy += dy/18;
+							e.vx *= .99;
+							e.vy *= .99;
+
+							e.r = 30*Math.sqrt(dx*dx+dy*dy)/100;
+							e.r =  parseInt(e.r < 10? 10:e.r > 30? 30 : e.r);
+							
+							//e.r = .98;
+						}
+						
 				});
 				players.forEach(function (f)
 				{
@@ -310,10 +330,12 @@ function game(gid, rm)
 				if(e.keys[4])
 					data.value.push({type:"line",x:50,y:50,w:20,h:10,position:"absolute"});
 				
+				
+				//data.value.push({type:"circle",x:0,y:0,r:100,c:"green"});
 				players.forEach(function (f)
 				{
-					data.value.push({type:"circle",x:f.px,y:f.py,r:30,c:f.team==0 ? "red" : "blue"});
-					data.value.push({type:"text",x:f.px+15,y:f.py-25,text:f.user.name});
+					data.value.push({type:"circle",x:f.px,y:f.py,r:f.r,c:f.team==0 ? "red" : "blue"});
+					data.value.push({type:"text",x:f.px+15,y:f.py-27,text:f.user.name});
 				});
 				
 				objects.forEach(function (f)
@@ -471,7 +493,8 @@ function game(gid, rm)
 		state = "running";		
 		objects.push({type:"flag",ox:-550, oy:550, r:40,team:0,taken:false});
 		objects.push({type:"flag",ox:550, oy:-550, r:40,team:1,taken:false});
-		//objects.push({type:"circle",x:0, y:0, r:40});
+//		objects.push({type:"circle",x:0, y:0, r:100});
+		objects.push({type:"hole",x:0, y:0, r:90});		
 		
 		hwall(-1000,-1000,1000);
 		vwall(-1000,-1000,1000);

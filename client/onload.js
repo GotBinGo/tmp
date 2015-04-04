@@ -25,6 +25,23 @@ window.onload = function()
 		};
 		ws.onopen = function () {
 			printMessage("Connected");
+			var bname = "";
+			var good = false;
+			var errors = "";
+			while(!good)
+			{							
+				bname = prompt("Enter your nickname:"+errors);
+				errors = "";
+				if(bname.length < 3)
+					errors+= "\nmin. 3 characters";
+				if(bname.length > 10)
+					errors+= "\nmax. 10 characters";
+				if(bname.match(/^[A-Za-z0-9]+$/) != bname)
+					errors+= "\nenglish letters and numbers only";
+				if (errors == "")
+					good = true;
+			}
+			ws.send("/sn "+bname);
 			dcd = false;
 			window.open = true;
 		};

@@ -13,7 +13,6 @@ function start(port,rm)
 		console.log("error");		
 		console.log("\t" + ws.code);		
 	});
-	var names = ["Tomi", "Bubu", "Balu", "Bence", "Bálint"]
 	wss.on('connection', function(ws) 
 	{
 		//console.log("connect" + socket_counter)
@@ -21,19 +20,29 @@ function start(port,rm)
 		socket_counter++; 
 
 		var new_user = {};
+		new_user.active = false;
 		new_user.ws = ws;
 		new_user.id = ws.id;
-		new_user.name = names[ws.id%5];
+		new_user.name = ws.id;
 		new_user.score = 0;
 
 		ws.on('message', function(message) 
 		{
-			cip.run(new_user, message);
+			//console.log(message);
+			if(message.split(' ')[0] == "/sn")
+			{			
+				new_user.name = message.split(' ')[1];
+				new_user.active = true;
+				gm.join(new_user, 0);
+			}
+			else if(new_user.active)
+				cip.run(new_user, message);
 		});
 
 		ws.on("close",function(a)
 		{	
-			gm.leave(new_user);	
+			if(new_user.active)
+				gm.leave(new_user);	
 		});
 
 		ws.on("error",function(error){
@@ -49,7 +58,7 @@ function start(port,rm)
 				console.log(ws.id+"must have left")
 		}
 		new_user.send = ws.send;		
-		gm.join(new_user, 0);
+		
 	});
 	console.log("listener running");
 }

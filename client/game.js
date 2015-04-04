@@ -64,15 +64,21 @@ function draw()
 		ctx.fillRect(width/2-posx,height/2-posy,width,height); 
 		ctx.fillStyle="black";*/
 		//text(0, 50, "Tomi", 50, "red");
-		hole(200, 200);
+		hole(0, 0);
 		
-		hole(400, 200);
+		/*hole(400, 200);
 		hole(200, 400);
 		hole(400, 400);
-		hole(300, 300);
+		hole(300, 300);*/
 		for(var i = 0; i < objects.length; i++)
 		{
-			drawElement(objects[i]);
+			if(objects[i].type != "flag" && objects[i].type != "text")
+				drawElement(objects[i]);
+		}
+		for(var i = 0; i < objects.length; i++)
+		{
+			if(objects[i].type == "flag" || objects[i].type == "text")
+				drawElement(objects[i]);
 		}
 				//
 		//line(0+width/2-posx, 0+height/2-posy, 100+width/2-posx, 100+height/2-posy,5);
@@ -138,7 +144,7 @@ function drawElement(e)
 		else
 			text(e.x+width/2-posx, e.y+height/2-posy, e.text, e.size, e.color, e.align);
 	else if(e.type == "flag")
-		flag(e.x+width/2-posx, e.y+height/2-posy,e.r,e.team, !e.taken);
+		flag(e.x+width/2-posx, e.y+height/2-posy,e.r,e.team,1,!e.taken);
 	else if(e.type == "pos")
 	{
 		posx = e.x;
@@ -183,6 +189,8 @@ function hole(x, y)
 }
 function text(x, y, text, size, color, align)
 {
+	ctx.shadowBlur = 15;
+	ctx.shadowColor = 'rgb(255,255,255)';
 	if(align == "center")
 		ctx.textAlign = 'center';
 	else
@@ -195,7 +203,7 @@ function text(x, y, text, size, color, align)
 	ctx.font = "bold "+size+"px arial";
 	ctx.fillText(text, x, y);
 	//ctx.fillText(text, x, y);
-
+	ctx.shadowBlur = 0;
 }
 function image(x,y)
 {			
@@ -219,30 +227,44 @@ function circle(x,y,r,c)
 	ctx.shadowBlur = 0;
 	ctx.shadowOffsetY = 0;
 }
-function flag(x,y,r,team,s)
+function flag(x,y,r,team,size,stroke)
 {			
-
+	
+	
 	var c = team == 0 ? "red" : "blue";
 	ctx.lineWidth = 1;
 	//circle(x,y,r,"green");
-	if(s)
+	if(stroke)
 	{
 		ctx.beginPath();
 		ctx.arc(x, y, r, 0, 2 * Math.PI, false);	
 		ctx.stroke();
 		ctx.closePath();
 	}
-	line(x,y-25,x,y+25);
-	line(x-1,y-25,x-1,y+25);
+	ctx.lineWidth = 1;
+	ctx.shadowBlur = 15;
+	ctx.shadowColor = 'rgb(255,255,255)';
+	x-= 5;
+
 	ctx.fillStyle=c;
 	ctx.beginPath();	
-	ctx.moveTo(x+20,y-10);
-    ctx.lineTo(x,y-25);
-    ctx.lineTo(x,y+5);
-	ctx.lineTo(x+20,y-10);
-	ctx.stroke();
+	
+	ctx.moveTo(x+20*size,y-10*size);
+    ctx.lineTo(x,y-25*size);
+    ctx.lineTo(x,y+5*size);
+	ctx.lineTo(x+20*size,y-10*size);
+	
 	ctx.closePath();
 	ctx.fill();
+	ctx.shadowBlur = 0;
+	ctx.stroke();
+	
+
+	line(x,y-25*size,x,y+25*size,2);
+
+//	line(x-1,y-25*size,x-1,y+25*size);
+	//line(x+1,y-25*size,x+1,y+25*size);
+	
 
 }
 function clear()
