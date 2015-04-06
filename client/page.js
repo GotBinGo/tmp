@@ -113,7 +113,7 @@ function onUserRoster(data)
 }
 function helper()
 {
-	ws.send("/g c " + document.getElementById("gname").value.split(" ").join("&nbsp;"));
+	ws.send("/g c " + document.getElementById("gname").value.trim().split(" ").join("&nbsp;"));
 }
 function onGroupRoster(data)
 {

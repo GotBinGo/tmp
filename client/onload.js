@@ -1,5 +1,6 @@
 ﻿window.onload = function()
 {
+	var ip = "localhost";
 	onResize();
 	console.log("loaded");
 	d_messages = document.getElementById('messages');
@@ -12,7 +13,7 @@
 		var wsImpl = window.WebSocket || window.MozWebSocket;           
 //		window.ws = new wsImpl('ws://s13.webtar.hu:80/');
 		//window.ws = new wsImpl('ws://192.168.15.106:80');
-		window.ws = new wsImpl('ws://localhost:80/');
+		window.ws = new wsImpl('ws://'+ip+':8080/');
 		
 		ws.onmessage = function (evt) 
 		{
@@ -41,7 +42,7 @@
 					errors+= "\nmin. 1 character";
 				if(bname.length > 23)
 					errors+= "\nmax. 23 characters";
-				if(bname.match(/^[A-Za-z0-9áÁéÉíÍóÓöÖőŐúÚüÜűŰ\ ]+$/) != bname)
+				if(bname.match(/^[A-Za-z0-9áÁéÉíÍóÓöÖőŐúÚüÜűŰ\ ]+$/) != bname || bname.trim() == "")
 					errors+= "\nletters, space and numbers only";
 				if (errors == "")
 					good = true;
@@ -61,7 +62,20 @@
 				reconn();
 		};       
 	}
-	reconn();
+	xmlhttp=new XMLHttpRequest();
+	xmlhttp.onreadystatechange= function()
+	{
+		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			ip = xmlhttp.responseText;
+			//alert(ip)
+			reconn();
+		}
+	}
+	xmlhttp.open("GET","conn.html",true);
+	xmlhttp.send();
+	
+	
 	//start();
 	window.addEventListener("keydown",onKeyDown);
 	window.addEventListener("keyup",onKeyUp);

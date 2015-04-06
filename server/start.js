@@ -16,16 +16,28 @@ var http = require('http');
 
 var finalhandler = require('finalhandler');
 var serveStatic = require('serve-static');
-
 var serve = serveStatic("../client");
-require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-  console.log('address: '+add);
+var ip = "";
+require('dns').lookup(require('os').hostname(), function (err, add, fam) 
+{
+	ip = add;
+	console.log('address: '+add);
 })
-var server = http.createServer(function(req, res){
-  var done = finalhandler(req, res)
-  serve(req, res, done)
+var server = http.createServer(function(req, res)
+{
+	console.log(req.url)
+	if(req.url == "/conn.html")
+	{
+		res.writeHead(200, {'Content-Type': 'text/plain'});
+		res.end(ip);
+	}		
+	else
+	{
+		var done = finalhandler(req, res)
+		serve(req, res, done)
+	}
 });
-server.listen(8080);
+server.listen(80);
 //finalhandler serve-static
 //connect
 
