@@ -16,6 +16,7 @@ var http = require('http');
 
 var finalhandler = require('finalhandler');
 var serveStatic = require('serve-static');
+var path = require('fs'); 
 var serve = serveStatic("../client");
 var ip = "";
 require('dns').lookup(require('os').hostname(), function (err, add, fam) 
@@ -25,8 +26,8 @@ require('dns').lookup(require('os').hostname(), function (err, add, fam)
 })
 var server = http.createServer(function(req, res)
 {
-	console.log(req.url)
-	if(req.url == "/conn.html")
+	//console.log(req.url)
+	if(req.url == "/conn.html" && !path.existsSync('../client/conn.html') )
 	{
 		res.writeHead(200, {'Content-Type': 'text/plain'});
 		res.end(ip);

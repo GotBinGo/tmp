@@ -13,7 +13,9 @@
 		var wsImpl = window.WebSocket || window.MozWebSocket;           
 //		window.ws = new wsImpl('ws://s13.webtar.hu:80/');
 		//window.ws = new wsImpl('ws://192.168.15.106:80');
+		console.log("connecting to: " + ip);
 		window.ws = new wsImpl('ws://'+ip+':8080/');
+		
 		
 		ws.onmessage = function (evt) 
 		{
