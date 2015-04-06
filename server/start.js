@@ -11,6 +11,24 @@ var rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
+
+var http = require('http');
+
+var finalhandler = require('finalhandler');
+var serveStatic = require('serve-static');
+
+var serve = serveStatic("../client");
+require('dns').lookup(require('os').hostname(), function (err, add, fam) {
+  console.log('address: '+add);
+})
+var server = http.createServer(function(req, res){
+  var done = finalhandler(req, res)
+  serve(req, res, done)
+});
+server.listen(8080);
+//finalhandler serve-static
+//connect
+
 rl.on('line', function (cmd) {
 	process.exit();
 });
