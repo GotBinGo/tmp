@@ -1,4 +1,4 @@
-var posx = 0;
+var posx = 0;//
 var posy = 0;
 var selfid = -1;
 var mul = 1;
@@ -10,6 +10,7 @@ var posy;
 var c;
 var ctx;
 var rot = 40;
+var nf;
 function onGameUpdate(m)
 {
 	var data = JSON.parse(m);
@@ -18,9 +19,9 @@ function onGameUpdate(m)
 	{
 		if(d_main_container.innerHTML.substring(1,7) != "canvas")
 		{
-			//d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='box-shadow: 0px 0px 100px #fff; max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
-			d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='box-shadow: 0px 10px 6px -6px #000; max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
-			 
+			//d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='box-shadow: 0px 0px 100px #fff; max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";			
+			d_main_container.innerHTML = "<canvas id='canvas' width='"+width+"' height='"+height+"' style='background-color:#333; box-shadow: 0px 10px 6px -6px #000; max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;left:0;bottom:0;border:1px solid #000000;'>></canvas>";
+			//window.setInterval(function(){ document.title = nf; nf = 0; }, 1000);
 			onResize();			
 			//window.setInterval(function(){draw();}, 15);
 			c = document.getElementById("canvas");
@@ -40,6 +41,7 @@ function onGameUpdate(m)
 
 function draw()
 {
+	nf ++;
 	if(d_main_container.innerHTML.substring(1,7) == "canvas")
 	{
 		clear();
@@ -64,22 +66,37 @@ function draw()
 		ctx.fillRect(width/2-posx,height/2-posy,width,height); 
 		ctx.fillStyle="black";*/
 		//text(0, 50, "Tomi", 50, "red");
-		hole(0, 0);
-		
+		//hole(0, 0);		
 		/*hole(400, 200);
 		hole(200, 400);
 		hole(400, 400);
-		hole(300, 300);*/
+		hole(300, 300);*/			
 		for(var i = 0; i < objects.length; i++)
 		{
-			if(objects[i].type != "flag" && objects[i].type != "text")
+			if(objects[i].type == "pos")
+				drawElement(objects[i]);
+		}
+/*
+		mine(200,0,20);
+		mine(200,100,25);
+*/
+		for(var i = 0; i < objects.length; i++)
+		{
+			if(objects[i].type == "hole")
 				drawElement(objects[i]);
 		}
 		for(var i = 0; i < objects.length; i++)
 		{
-			if(objects[i].type == "flag" || objects[i].type == "text")
+			if(objects[i].type != "flag" && objects[i].type != "text" && objects[i].type!= "hole")
+				drawElement(objects[i]);
+		}		
+		for(var i = 0; i < objects.length; i++)
+		{
+			if((objects[i].type == "flag" || objects[i].type == "text") && objects[i].type!= "hole")
 				drawElement(objects[i]);
 		}
+	
+		
 				//
 		//line(0+width/2-posx, 0+height/2-posy, 100+width/2-posx, 100+height/2-posy,5);
 		
@@ -108,9 +125,10 @@ function draw()
 
 		ctx.fillStyle="#ddd";
 		ctx.fillRect(-1000+width/2-posx, -1000+height/2-posy, 2000, 2000);
+		/*
 		ctx.fillStyle="#333";
 		ctx.fillRect(-2000+width/2-posx, -2000+height/2-posy, 4000, 4000); 
-		
+		*/
 		ctx.globalAlpha=1;
 		ctx.strokeStyle = 'rgba(0,0,0,1)';		
 		ctx.globalCompositeOperation = tm;
@@ -145,6 +163,10 @@ function drawElement(e)
 			text(e.x+width/2-posx, e.y+height/2-posy, e.text, e.size, e.color, e.align);
 	else if(e.type == "flag")
 		flag(e.x+width/2-posx, e.y+height/2-posy,e.r,e.team,1,!e.taken);
+	else if(e.type == "hole")
+		hole(e.x, e.y);
+	else if(e.type == "mine")
+		mine(e.x, e.y,e.r);
 	else if(e.type == "pos")
 	{
 		posx = e.x;
@@ -164,6 +186,43 @@ function line(x,y,x2,y2,w)
 	ctx.closePath();
 	ctx.stroke();
 	ctx.lineWidth = 1;
+}
+function mine(x, y, r)
+{
+		ctx.beginPath();
+		ctx.arc(x+width/2-posx, y+height/2-posy, r-10, 0, 2 * Math.PI, false);	
+		ctx.stroke();
+		ctx.fill();
+		ctx.closePath();
+		
+		ctx.translate(x+width/2-posx,y+height/2-posy);
+		/*
+		ctx.beginPath();
+		ctx.arc(x, y, r, 0, 2 * Math.PI, false);	
+		ctx.stroke();
+		ctx.closePath();
+		*/
+
+		
+		var numb = (r/2)-(r/2)%1;
+		for(var i = 0; i < numb;i ++)
+		{
+			ctx.translate(0.5, 0.5);
+			ctx.rotate((360/numb*i)*(Math.PI/180))
+			ctx.beginPath();
+			ctx.moveTo(r-10, 0);
+			ctx.lineTo(r,0);
+			ctx.lineTo(r-5,3);
+			ctx.moveTo(r, 0);
+			ctx.lineTo(r-5,-3);
+			ctx.lineWidth = 2;
+
+			ctx.strokeStyle = 'black';
+			ctx.stroke();
+			ctx.rotate((-360/numb*i)*(Math.PI/180))
+			ctx.translate(-0.5, -0.5);
+		}
+		ctx.translate(-(x+width/2-posx),-(y+height/2-posy));
 }
 function hole(x, y)
 {
@@ -185,7 +244,6 @@ function hole(x, y)
 			ctx.translate(-0.5, -0.5);
 		}
 		ctx.translate(-(x+width/2-posx),-(y+height/2-posy));
-		
 }
 function text(x, y, text, size, color, align)
 {

@@ -1,4 +1,4 @@
-window.onload = function()
+﻿window.onload = function()
 {
 	onResize();
 	console.log("loaded");
@@ -18,10 +18,12 @@ window.onload = function()
 		{
 			//console.log(evt.data);
 			//pre.innerHTML += evt.data; 
+			
+			var hel = evt.data.split("&nbsp;").join(" ");
 			if(evt.data[0] == "/")
-				onCommand(evt.data);
+				onCommand(hel);
 			else
-				printMessage(evt.data);
+				printMessage(hel);
 		};
 		ws.onopen = function () {
 			printMessage("Connected");
@@ -31,16 +33,20 @@ window.onload = function()
 			while(!good)
 			{							
 				bname = prompt("Enter your nickname:"+errors);
-				errors = "";
-				if(bname.length < 3)
-					errors+= "\nmin. 3 characters";
-				if(bname.length > 10)
-					errors+= "\nmax. 10 characters";
-				if(bname.match(/^[A-Za-z0-9]+$/) != bname)
-					errors+= "\nenglish letters and numbers only";
+				if(bname === null)
+					location.reload();
+					//bname = "";
+				errors = "";				
+				if(bname.length < 1)
+					errors+= "\nmin. 1 character";
+				if(bname.length > 23)
+					errors+= "\nmax. 23 characters";
+				if(bname.match(/^[A-Za-z0-9áÁéÉíÍóÓöÖőŐúÚüÜűŰ\ ]+$/) != bname)
+					errors+= "\nletters, space and numbers only";
 				if (errors == "")
 					good = true;
 			}
+			bname = bname.split(" ").join("&nbsp;")
 			ws.send("/sn "+bname);
 			dcd = false;
 			window.open = true;

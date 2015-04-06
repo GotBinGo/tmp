@@ -10,7 +10,8 @@ function manager(rm)
 	var group_counter = 0;
 	function onUserRoster(gid) //or not so private
 	{		
-		send(gid, "/ourc "+JSON.stringify([{name:groups[gid].name}].concat(JSON.parse(listGroup(gid)))))
+		if(groups[gid] !== undefined)
+			send(gid, "/ourc "+JSON.stringify([{name:groups[gid].name}].concat(JSON.parse(listGroup(gid)))))
 	}
 	function onGroupRoster()
 	{

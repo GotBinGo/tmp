@@ -171,7 +171,7 @@ function game(gid, rm)
 						}
 						else
 						{
-							//throw "shit"
+							//throw "as"
 						}
 						e.vx = e.vx/(elapsed/1000);
 						e.vy = e.vy/(elapsed/1000);
@@ -185,7 +185,7 @@ function game(gid, rm)
 								e.flags.forEach(function (g)
 								{
 									//console.log(g.x+" "+g.y);
-									e.user.score += 1;
+									e.user.score += 10;
 									rm.gm.onUserRoster(e.user.gid);
 									delete g.x;
 									delete g.y;
@@ -227,10 +227,66 @@ function game(gid, rm)
 							
 							//e.r = .98;
 						}
-						
+					if(f.type == "mine")
+						if(inRange(f.x,f.y,f.r, e.px, e.py, e.r)) 
+						{
+							if(e.flags.length > 0)
+							{
+								
+								e.flags.forEach(function (g)
+								{
+									delete g.x;
+									delete g.y;
+									g.x = g.ox;
+									g.y = g.oy;
+									g.taken = false;
+								});
+								e.flags = [];
+							}
+							init(e);
+						}
 				});
 				players.forEach(function (f)
-				{
+				{				
+					if(inRange(f.px,f.py,f.r, e.px, e.py, e.r) && e.team != f.team) //coll with flag
+					{
+						var fa = 0;
+						var fb = 0;						
+						if(e.flags.length > 0)
+						{
+							
+							e.flags.forEach(function (g)
+							{
+								fa++;
+								delete g.x;
+								delete g.y;
+								g.x = g.ox;
+								g.y = g.oy;
+								g.taken = false;
+							});
+							e.flags = [];
+							init(e);
+						}
+						if(f.flags.length > 0)
+						{							
+							f.flags.forEach(function (g)
+							{
+								fb++;
+								delete g.x;
+								delete g.y;
+								g.x = g.ox;
+								g.y = g.oy;
+								g.taken = false;
+							});
+							f.flags = [];
+							init(f);
+						}
+						
+						f.user.score +=(fa-fb) > 0 ? fa-fb : 0;
+						e.user.score +=(fb-fa) > 0 ? fb-fa : 0;
+						rm.gm.onUserRoster(e.user.gid);
+					}
+					
 					if(f.user.id != e.user.id)
 					{
 						var dx = e.px-f.px;
@@ -253,38 +309,7 @@ function game(gid, rm)
 								f.py = c.f.py;					
 							}
 						}
-					}
-									
-				
-					if(inRange(f.px,f.py,f.r, e.px, e.py, e.r) && e.team != f.team) //coll with flag
-					{
-						if(e.flags.length > 0)
-						{
-							e.flags.forEach(function (g)
-							{
-								delete g.x;
-								delete g.y;
-								g.x = g.ox;
-								g.y = g.oy;
-								g.taken = false;
-							});
-							e.flags = [];
-							init(e);
-						}
-						if(f.flags.length > 0)
-						{
-							f.flags.forEach(function (g)
-							{
-								delete g.x;
-								delete g.y;
-								g.x = g.ox;
-								g.y = g.oy;
-								g.taken = false;
-							});
-							f.flags = [];
-							init(f);
-						}
-					}
+					}				
 				});				
 				
 				e.vx *= 0.99;
@@ -435,8 +460,11 @@ function game(gid, rm)
 		}
 		else if(e.type == "player")
 		{			
-			e.px = 0;
-			e.py = 0;
+			e.px = e.ox;
+			e.py = e.oy;
+			e.vx = e.px/5+(Math.random()*5)-2.5;
+			e.vy = e.py/5+(Math.random()*5)-2.5;
+			e.r = 30;
 		}
 	}
 	function vwall(x, y1, y2)
@@ -467,8 +495,21 @@ function game(gid, rm)
 	//public
 	function join(user)
 	{			
-		players[user.id] = {type:"player",flags:[], user:user, team:-1, score: 0, px:0, py:0, vx:0, vy:0, r:30, keys:[false, false, false, false,false], out:""};
-		players[user.id].team = team(1).length < team(0).length ? 1 : 0;		
+		players[user.id] = {type:"player",flags:[], user:user, team:-1, score: 0, px:0, py:0, ox:0, oy:0, vx:0, vy:0, r:30, keys:[false, false, false, false,false], out:""};
+		players[user.id].team = team(1).length < team(0).length ? 1 : 0;			
+		if(players[user.id].team == 0)
+		{
+			players[user.id].ox = -800;
+			players[user.id].oy = 800;
+		}
+		else if(players[user.id].team == 1)
+		{
+			players[user.id].ox = 800;
+			players[user.id].oy = -800;
+		}
+		init(players[user.id]);
+		
+			
 		console.log(user.name+"joined the game");		
 		if(state == "lobby")
 			start();
@@ -494,17 +535,55 @@ function game(gid, rm)
 		objects.push({type:"flag",ox:-550, oy:550, r:40,team:0,taken:false});
 		objects.push({type:"flag",ox:550, oy:-550, r:40,team:1,taken:false});
 //		objects.push({type:"circle",x:0, y:0, r:100});
-		objects.push({type:"hole",x:0, y:0, r:90});		
+		//objects.push({type:"hole",x:0, y:0, r:90});
+		objects.push({type:"hole",x:500, y:500, r:90});
+		objects.push({type:"hole",x:-500, y:-500, r:90});
+		
+		
 		
 		hwall(-1000,-1000,1000);
 		vwall(-1000,-1000,1000);
 		vwall(1000,-1000,1000);
-		hwall(1000,-1000,1000);
+		hwall(1000,-1000,1000);	
 		
-		hwall(400,-800,-400);		
-		vwall(-400,800,400);		
+		hwall(400,-800,-400);
+		vwall(-400,800,400);
 		hwall(-400,800,400);
 		vwall(400,-800,-400);
+		
+		objects.push({type:"mine",x:-150, y:250, r:20});
+		objects.push({type:"mine",x:-250, y:150, r:20});
+		objects.push({type:"mine",x:100, y:600, r:20});
+		objects.push({type:"mine",x:300, y:500, r:20});
+		objects.push({type:"mine",x:500, y:300, r:20});
+		objects.push({type:"mine",x:600, y:100, r:20});
+		objects.push({type:"mine",x:0, y:900, r:20});
+
+		hwall(400,-100,100);
+		vwall(0,300,500);
+		
+		vwall(-400,-100,100);
+		hwall(0,-300,-500);
+		//jf
+		
+		objects.push({type:"mine",x:150, y:-250, r:20});
+		objects.push({type:"mine",x:250, y:-150, r:20});
+		objects.push({type:"mine",x:-100, y:-600, r:20});
+		objects.push({type:"mine",x:-300, y:-500, r:20});
+		objects.push({type:"mine",x:-500, y:-300, r:20});
+		objects.push({type:"mine",x:-600, y:-100, r:20});
+		objects.push({type:"mine",x:0, y:-900, r:20});
+		
+		hwall(0,300,500);
+		vwall(400,-100,100);
+		
+		hwall(-400,-100,100);
+		vwall(0,-300,-500);
+		
+		
+		
+		
+		
 		objects.forEach(function (e){init(e)});
 		timer = setInterval(function (){update()}, 10);
 		mode(true);

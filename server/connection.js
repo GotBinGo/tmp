@@ -27,7 +27,7 @@ function start(port,rm)
 		new_user.score = 0;
 
 		ws.on('message', function(message) 
-		{
+		{			
 			//console.log(message);
 			if(message.split(' ')[0] == "/sn")
 			{			

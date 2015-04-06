@@ -1,12 +1,15 @@
 
 <html>
 	<head>
-		<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+		
+		<meta charset="UTF-8"> 
 		<link rel="stylesheet" type="text/css" href="style.css">		
 		<script src="page.js"></script>
 		<script src="onload.js"></script>
 		<script src="game.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<title>Congame
+		</title>
 	</head>
 	<body onresize="onResize()" onmousemove="mmove(event)" onmouseup="mup()">
 	<!--
@@ -23,13 +26,14 @@
 			<div id="main_container">
 			</div>
 		</div>
-		<div id="drag" onmousedown="mdown()" style="position:relative; height: 10px; width:100%; top:calc(100% - 324px)">
+		<div id="drag" onmousedown="mdown()" style="cursor:row-resize; position:relative; height: 10px; width:100%; top:calc(100% - 324px)">
 		
 		</div>
 		<div id="bottom">
 
-			<div id="info_area">
-			 	<div id="info_area_header" >
+			<div id="info_area">		
+			<img id="exit" onclick="ws.send('/g l')" src='exit.png' style='visibility:hidden; z-index:2; position: absolute;width:30px; margin: 5px 0 0 150px'>			
+			 	<div id="info_area_header" >				
 				</div> 
 				<div id="info_area_container" >
 				</div>

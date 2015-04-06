@@ -67,6 +67,14 @@ function printMessage(message)
 }
 var sent = [];
 var currup = 0;
+function showexit()
+{
+		
+	if(document.getElementById("roomname").firstChild.innerHTML == "Landing room")
+		document.getElementById("exit").style.visibility = "hidden";
+	else
+		document.getElementById("exit").style.visibility = "";
+}
 function sendinp()
 {				
 	if(inp.value != "")
@@ -94,9 +102,10 @@ function onUserRoster(data)
 		
 		if(i == 0)
 		{
-			var a = "<div style='margin-bottom:5px; height:100%; width:100%; position:relative; box-sizing:border-box; padding:5px 5px 5px 5px; background-color:#333; color:#ddd'><h3 style='margin:0;'>"+arr[i].name+"</h3></div>";
+			var a = "<div id='roomname' style='margin-bottom:5px; height:100%; overflow:hidden; width:150px; position:relative; box-sizing:border-box; padding:5px 5px 5px 5px; background-color:#333; color:#ddd'><h3 style='margin:0;'>"+arr[i].name+"</h3></div>";
 			new_div.innerHTML = a;
 			d_info_area_header.appendChild(new_div);
+			showexit();
 		}
 		else
 			d_info_area_container.appendChild(new_div);
@@ -104,7 +113,7 @@ function onUserRoster(data)
 }
 function helper()
 {
-	ws.send("/g c " + document.getElementById("gname").value);
+	ws.send("/g c " + document.getElementById("gname").value.split(" ").join("&nbsp;"));
 }
 function onGroupRoster(data)
 {
@@ -113,7 +122,7 @@ function onGroupRoster(data)
 	d_main_container.innerHTML = "";	
 	
 	var new_div = document.createElement("DIV");
-	var a = "<div style='margin-bottom:5px; width:100%; height:50px; position:relative; box-sizing:border-box; padding:10px 105px 5px 5px; background-color:#333; color:#ddd'><h3 style='margin:0;'>Create room: <input id='gname' style='background:grey; border:none; color:#DDD; font-size: 16px;padding-left: 3px;padding-top: 2px;padding-bottom: 2px;'></input></h3><div style='position:absolute; top:0;bottom:0;right:0;width:100px;'><input type='button' value='Create' onclick='helper();'style='width: 100%; height:100%;'/></div></div>";
+	var a = "<div style='margin-bottom:5px; width:100%; height:50px; position:relative; box-sizing:border-box; padding:10px 105px 5px 5px; background-color:#333; color:#ddd'><h3 style='margin:0;'>Create room: <input id='gname' maxlength='20' style='background:grey; border:none; color:#DDD; font-size: 16px;padding-left: 3px;padding-top: 2px;padding-bottom: 2px;'></input></h3><div style='position:absolute; top:0;bottom:0;right:0;width:100px;'><input type='button' value='Create' onclick='helper();'style='width: 100%; height:100%;'/></div></div>";
 	new_div.innerHTML = a;
 	d_main_container.appendChild(new_div);
 	
