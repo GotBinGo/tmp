@@ -17,6 +17,12 @@ function manager(rm)
 	{
 		send(0,"/ogrc " + list())
 	}
+	function names(e)
+	{
+		var a = [];
+		e.users.forEach(function (u){a.push(u.name)})
+		return a.join(", ");
+	}
 	//public----------------	
 	function create(user, name, pw)
 	{
@@ -118,10 +124,11 @@ function manager(rm)
 			g.users.forEach(function (e){e.ws.send(msg);});
 		});
 	}
+	
 	function list()
 	{
 		var tmp = [];
-			groups.forEach(function (e){if(e.id != 0)tmp.push({name:e.name,id:e.id})});	
+			groups.forEach(function (e){if(e.id != 0)tmp.push({name:e.name,id:e.id, roster:names(e)})});	
 		return JSON.stringify(tmp);
 	}
 	function listGroup(gid)

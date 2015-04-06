@@ -96,7 +96,7 @@ function onUserRoster(data)
 	for(var i = 0; i< arr.length; i ++)
 	{
 		var new_div = document.createElement("DIV");
-		var a = "<div style='margin-bottom:5px; width:100%; position:relative; box-sizing:border-box; padding:5px 5px 5px 5px; background-color:#333; color:#ddd'>"+arr[i].name+" "+ (arr[i].score === undefined ? " ":"Score: "+arr[i].score)+"</div>";
+		var a = "<div style='margin-bottom:5px; width:100%; position:relative; box-sizing:border-box; padding:5px 5px 5px 5px; background-color:#333; color:#ddd'><p style='margin:0; float:left'>"+arr[i].name+"</p> <p style='margin:0; float:right'>"+ (arr[i].score === undefined ? " ":arr[i].score)+"</p><div style='clear: both;'></div></div>";
 		new_div.innerHTML = a;
 		//d_main_container.appendChild(new_div);
 		
@@ -130,7 +130,7 @@ function onGroupRoster(data)
 	for(var i = 0; i< arr.length; i ++)
 	{
 		var new_div = document.createElement("DIV");
-		var a = "<div style='margin-bottom:5px; width:100%; position:relative; box-sizing:border-box; padding:5px 105px 5px 5px; background-color:#333; color:#ddd'><h3 style='margin:0;'>"+arr[i].name+"</h3>Players: 1, 2, 3<div style='position:absolute; top:0;bottom:0;right:0;width:100px;'><input type='button' value='Join' onclick='ws.send(\"/g j "+arr[i].id+"\");'style='width: 100%; height:100%;'/></div></div>";
+		var a = "<div style='margin-bottom:5px; width:100%; position:relative; box-sizing:border-box; padding:5px 105px 5px 5px; background-color:#333; color:#ddd'><h3 style='margin:0;'>"+arr[i].name+"</h3>Players: "+arr[i].roster+"<div style='position:absolute; top:0;bottom:0;right:0;width:100px;'><input type='button' value='Join' onclick='ws.send(\"/g j "+arr[i].id+"\");'style='width: 100%; height:100%;'/></div></div>";
 		new_div.innerHTML = a;
 		d_main_container.appendChild(new_div);
 		//d_info_area_container.appendChild(new_div);
