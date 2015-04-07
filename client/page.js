@@ -162,7 +162,7 @@ function onKeyDown(e)
 		if(document.activeElement.id == "inp")
 			sendinp();
 	}
-	if(e.keyCode == 37)
+	if(e.keyCode == 37 || e.keyCode == 65) //left
 	{
 		if(document.activeElement.id != "inp")
 		{
@@ -173,9 +173,9 @@ function onKeyDown(e)
 			}
 		}
 	}
-	if(e.keyCode == 38) //up
+	if(e.keyCode == 38 || e.keyCode == 87) //up
 	{	
-		if(document.activeElement.id == "inp")
+		if(document.activeElement.id == "inp" && e.keyCode == 38 )
 		{
 			if(currup < sent.length)
 			{
@@ -194,7 +194,7 @@ function onKeyDown(e)
 		}
 
 	}
-	if(e.keyCode == 39 )
+	if(e.keyCode == 39 || e.keyCode == 68) //right
 	{
 		if(document.activeElement.id != "inp")
 		{
@@ -205,9 +205,9 @@ function onKeyDown(e)
 			}
 		}
 	}
-	if(e.keyCode == 40) //down
+	if(e.keyCode == 40 || e.keyCode == 83) //down
 	{			
-		if(document.activeElement.id == "inp")
+		if(document.activeElement.id == "inp" && e.keyCode == 40 )
 		{
 			if(currup > 1)
 			{
@@ -232,7 +232,7 @@ function onKeyDown(e)
 }
 function onKeyUp(e)
 {
-	if(e.keyCode == 37)
+	if(e.keyCode == 37 || e.keyCode == 65)
 	{
 		if(keys[0])
 		{
@@ -240,7 +240,7 @@ function onKeyUp(e)
 			ws.send("/game keys 0 0");
 		}
 	}
-	if(e.keyCode == 38)
+	if(e.keyCode == 38 || e.keyCode == 87)
 	{
 		if(keys[1])
 		{
@@ -248,7 +248,7 @@ function onKeyUp(e)
 			ws.send("/game keys 1 0");
 		}
 	}
-	if(e.keyCode == 39)
+	if(e.keyCode == 39 || e.keyCode == 68)
 	{
 		if(keys[2])
 		{
@@ -256,7 +256,7 @@ function onKeyUp(e)
 			ws.send("/game keys 2 0");
 		}
 	}
-	if(e.keyCode == 40)
+	if(e.keyCode == 40 || e.keyCode == 83)
 	{
 		if(keys[3])
 		{

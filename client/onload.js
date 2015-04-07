@@ -80,7 +80,34 @@
 	
 	//start();
 	window.addEventListener("keydown",onKeyDown);
-	window.addEventListener("keyup",onKeyUp);
+	window.addEventListener("keyup",onKeyUp);	
+	window.addEventListener("touchstart",function(e){down(e.changedTouches[0].pageX,e.changedTouches[0].pageY);});
+	window.addEventListener("touchend",function(e){up(e.changedTouches[0].pageX,e.changedTouches[0].pageY);});
+	function down(x,y)
+	{
+		//document.title = d_main_container.clientHeight;
+		if(y < d_main_container.clientHeight/3)
+			ws.send("/game keys 1 1");
+			//up
+		if(y > d_main_container.clientHeight/3*2)
+			ws.send("/game keys 3 1");
+			//down
+			
+		if(x < d_main_container.clientWidth/3)
+			ws.send("/game keys 0 1");
+			//left
+		if(x > d_main_container.clientWidth/3*2)
+			ws.send("/game keys 2 1");
+			//right			
+	}
+	function up()
+	{
+		ws.send("/game keys 0 0");
+		ws.send("/game keys 1 0");
+		ws.send("/game keys 2 0");
+		ws.send("/game keys 3 0");
+	}
+	//window.addEventListener("touchmove",function(){document.title += "b"});
 	//d_messages.innerHTML = "asd";
 	function reconn()
 	{					
