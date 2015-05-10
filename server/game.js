@@ -214,13 +214,30 @@ function game(gid, rm)
 						
 							var dx = (f.x-e.px);		
 							var dy = (f.y-e.py);
-					
-							e.vy += dx/30;							
-							e.vx -= dy/30;		
+							var dd = Math.sqrt(dx*dx+dy*dy)
+							/*					
+							e.vy += dx/30;
+							e.vx -= dy/30;
+							*/
+							e.vy += dx/10;
+							e.vx -= dy/10;
+							/*
 							e.vx += dx/18;
 							e.vy += dy/18;
-							e.vx *= .99;
-							e.vy *= .99;
+							*/
+							e.vx += dx/5;
+							e.vy += dy/5;
+							if(dd > 80)
+							{
+							    e.vx *= 1.01;
+							    e.vy *= 1.01;
+    							}
+							else
+							{
+							    e.vx *= 0.98;
+							    e.vy *= 0.98;
+							}
+
 
 							e.r = 30*Math.sqrt(dx*dx+dy*dy)/100;
 							e.r =  parseInt(e.r < 10? 10:e.r > 30? 30 : e.r);
@@ -296,6 +313,12 @@ function game(gid, rm)
 							if(e.vx*dx+e.vy*dy <= 0)
 							{
 								var c = custcoll(1,1,1,e,f);	
+								e.r-=2;
+								if(e.r < 10)
+								    init(e)
+								f.r-=2;
+								if(f.r < 10)
+								    init(f)
 								coll = c.coll;
 								
 								e.vx = c.e.vx;
@@ -546,10 +569,10 @@ function game(gid, rm)
 		vwall(1000,-1000,1000);
 		hwall(1000,-1000,1000);	
 		
-		hwall(400,-800,-400);
-		vwall(-400,800,400);
-		hwall(-400,800,400);
-		vwall(400,-800,-400);
+		hwall(300,-800,-300);
+		vwall(-300,800,300);
+		hwall(-300,800,300);
+		vwall(300,-800,-300);
 		
 		objects.push({type:"mine",x:-150, y:250, r:20});
 		objects.push({type:"mine",x:-250, y:150, r:20});
