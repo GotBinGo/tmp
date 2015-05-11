@@ -1,4 +1,4 @@
-//basic html page functions
+//basic html page functions	
 var pageleave = false;
 window.addEventListener("beforeunload", function (event) {
 	pageleave = true;
@@ -6,12 +6,33 @@ window.addEventListener("beforeunload", function (event) {
 var down = false;
 function mdown(evt)
 {
+	//document.getElementById("360_frame").focus();
 	var d = document.getElementById('drag');
 	down = true;
 }
 function mup(evt)
 {
 	down = false;
+}
+function toggle_side(a)
+{	
+	
+	var tm = document.getElementById('side');
+	var sb2 = document.getElementById('side_button2');
+	if(tm.style.visibility == '')
+	{
+		tm.style.visibility = 'hidden';
+		a.style.right = 0;
+		a.style.left = "";
+		sb2.style.visibility = 'visible';
+	}		
+	else
+	{
+		tm.style.visibility = '';
+		a.style.left = 0;
+		a.style.right = "";
+		sb2.style.visibility = 'hidden';
+	}
 }
 function mmove(evt)
 {
