@@ -34,6 +34,19 @@ function toggle_side(a)
 		sb2.style.visibility = 'hidden';
 	}
 }
+function iff(event, a)
+{
+    if(a == 2)
+    {
+	document.getElementById('canvas').focus();
+    }
+    else
+    {
+	document.getElementById('360_frame').contentWindow.document.body.firstChild.focus(); 
+	console.log(document.activeElement); 
+	event.preventDefault();
+    }
+}
 function mmove(evt)
 {
 	var y = evt.clientY;

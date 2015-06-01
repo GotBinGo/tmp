@@ -27,12 +27,12 @@
 			</div>
 			<div id="side" style="background-color:red; top:0; right:0; position:absolute; width:300px; height:100%;visibility:hidden">
 			<div style="height:100%">
-			<iframe id="360_frame"style="width:100%; height:100%" src="http://bordak.eu/361/">
+			<iframe id="360_frame"style="width:100%; height:100%" src="./361/">
 			</iframe>			
 			</div >
 			<div id="side_button" onclick="toggle_side(this)" style="background-color:blue; bottom:0; right:0; visibility:visible; position:absolute; width:50px; height:50px;">
 			</div>
-			<div id="side_button2" onmousedown="/*document.getElementById('360_frame').contentWindow.document.body.focus(); console.log(document.activeElement);*/" style="background-color:purple; bottom:0; right:50px; visibility:visible; position:absolute; width:50px; height:50px;">
+			<div id="side_button2" onmousedown="iff(event)" onmouseup="iff(event, 2)" style="background-color:purple; bottom:0; right:50px; visibility:visible; position:absolute; width:50px; height:50px;">
 			</div>
 			</div>
 

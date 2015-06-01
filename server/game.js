@@ -367,7 +367,13 @@ function game(gid, rm)
 				e.vy += ey;
 				
 
-					
+				if(collx || colly || coll)
+				{
+				    e.r -= 2;
+				}
+				if(e.r<10)
+	    			    init(e);
+
 				if(!collx && !coll)
 				e.px += e.vx * elapsed/1000;
 					if(!colly && !coll)
