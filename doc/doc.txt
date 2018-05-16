@@ -3,4 +3,4 @@ platform
 fejlesztokorny
 
 meg lehetne
-a kliens es a szerver is js
+a kliens es a szerver is JavaScript
